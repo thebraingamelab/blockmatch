@@ -120,32 +120,51 @@ jsPsych.plugins['boxes'] = (function(){
     return html;
   }
 
-  plugin.generateShape=function(rows, cols, fill){
+  plugin.generateShape=function(nrows, ncols, fill){
       var grid = [];
       // create an array with rows*cols values, and fill of them are true.
-      var total_spots = rows * cols;
+      var total_spots = nrows * ncols;
+      for(i=0; i < nrows; i++){
+        grid[i]=[]
+        for(j=0; j< ncols; j++){
+          grid[i][j]= false
+        }
+      }
+      // pick a random starting location
+      var row = Math.floor(Math.random()*nrows)
+      var col = Math.floor(Math.random()*ncols)
+      grid[row][col]= true
 
-      var all = [];
-        for(i=0; i < total_spots; i++) {
-            all.push(i < fill)
+      for(var i=1; i<fill; i++){
+        while(grid[row][col] == true){
+          if (Math.floor(Math.random()*2) == 0) {
+             if (Math.floor(Math.random()*2) == 0){
+               if(row<nrows-1){
+                 row++
+               }
+             }
+             else {
+               if(row>0){
+                 row--
+               }
+             }
+          } else {
+            if (Math.floor(Math.random()*2) == 0){
+              if(col<ncols-1){
+                col++
+              }
+            }
+            else {
+              if(col>0){
+                col--
+              }
+            }
+          }
         }
 
-      // randomize the order of the array (jsPsych.randomization.shuffle())
-       all= jsPsych.randomization.shuffle(all)
-
-      // add the first cols elements to a new array, and then push that array onto grid.
-
-
-      for(row=0; row < rows; row++){
-        var r = all.splice(0, cols)
-
-        grid.push(r)
-        console.log('row')
+        grid[row][col] = true;
       }
-
-
-
-    return grid;
+      return grid;
   }
 
   plugin.reflectShape=function(shape){
