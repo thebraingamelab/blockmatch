@@ -40,7 +40,7 @@ jsPsych.plugins['boxes'] = (function(){
     var rotation_reference= trial.rotation_reference;
     var rotation_target= trial.rotation_target;
     var filled_in_reference= trial.filled_in_reference;
-    var filled_in_target = trial.filled_in_target;
+    var filled_in_target = trial.reflected? plugin.reflectShape(trial.filled_in_reference): trial.filled_in_reference;
     var html= createSquares(grid_cols, grid_rows, square_size, rotation_reference, filled_in_reference);
     var html_2= createSquares(grid_cols, grid_rows, square_size, rotation_target, filled_in_target);
 
@@ -62,43 +62,60 @@ jsPsych.plugins['boxes'] = (function(){
       document.querySelector('#inside_box_2').className = "start_intro_animation";
       // animate only the right box coming from the top of the screen
     }
+    var correct = null;
 
     document.addEventListener("keydown", function(e){
 
       if (e.keyCode==78){
         document.querySelector('#inside_box_2').addEventListener("animationend", function(){
           display_element.innerHTML = "";
-          jsPsych.finishTrial();
+          end();
         })
+        document.querySelector('#inside_box_2').className = "start_animation";
+        if(trial.clearboth){
+          document.querySelector('#inside_box_1').className = "start_animation";
+        }
         if(correct_match == 'n'){
-          document.querySelector('#inside_box_2').className = "start_animation";
+
           document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:20%; display:block; margin: auto; ">');
           wAudio.play();
+          correct = true;
         }
         if (correct_match == 'y'){
-          document.querySelector('#inside_box_2').className = "start_animation";
+
           document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:20%; display:block; margin: auto; ">');
           lAudio.play();
+          correct = false;
         }
       } else if( e.keyCode == 89){
         document.querySelector('#inside_box_2').addEventListener("animationend", function(){
           display_element.innerHTML = "";
-          jsPsych.finishTrial();
+          end();
         })
+        document.querySelector('#inside_box_2').className = "start_animation";
+        if(trial.clearboth){
+          document.querySelector('#inside_box_1').className = "start_animation";
+        }
         if(correct_match == 'y'){
           document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:20%; display:block; margin: auto; ">');
           wAudio.play();
-          document.querySelector('#inside_box_1').className = "start_animation";
-          document.querySelector('#inside_box_2').className = "start_animation";
+          correct = true;
         }
         if(correct_match == 'n'){
-          document.querySelector('#inside_box_2').className = "start_animation";
+
           document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:20%; display:block; margin: auto; ">');
           lAudio.play();
+          correct = false;
         }
       }
 
     }, {once:true});
+
+    function end(){
+      jsPsych.finishTrial({
+        correct: correct
+      })
+    }
 
 
   }
@@ -125,22 +142,22 @@ jsPsych.plugins['boxes'] = (function(){
       // create an array with rows*cols values, and fill of them are true.
       var total_spots = nrows * ncols;
       for(i=0; i < nrows; i++){
-        grid[i]=[]
+        grid[i]=[];
         for(j=0; j< ncols; j++){
-          grid[i][j]= false
+          grid[i][j]= false;
         }
       }
       // pick a random starting location
-      var row = Math.floor(Math.random()*nrows)
-      var col = Math.floor(Math.random()*ncols)
-      grid[row][col]= true
+      var row = Math.floor(Math.random()*nrows);
+      var col = Math.floor(Math.random()*ncols);
+      grid[row][col]= true;
 
       for(var i=1; i<fill; i++){
         while(grid[row][col] == true){
           if (Math.floor(Math.random()*2) == 0) {
              if (Math.floor(Math.random()*2) == 0){
                if(row<nrows-1){
-                 row++
+                 row++;
                }
              }
              else {
@@ -170,8 +187,8 @@ jsPsych.plugins['boxes'] = (function(){
   plugin.reflectShape=function(shape){
     var low= null;
     var high= null;
-    var nrows= shape.length
-    var ncols= shape[0].length
+    var nrows= shape.length;
+    var ncols= shape[0].length;
     for(i=0; i < ncols; i++){
       for(j=0; j< nrows; j++){
         if(shape[j][i]== true){

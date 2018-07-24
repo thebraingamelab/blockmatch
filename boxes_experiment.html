@@ -14,27 +14,54 @@
       var timeline = [];
 
       var shape = jsPsych.plugins["boxes"].generateShape(4,4,8)
-      // shape = [
-      //   [false, false, false, true],
-      //   [false, false, true, false],
-      //   [false, false, true, false],
-      //   [false, true, false, false]
-      // ]
+
+      var trials = [
+        {reflected:true, orientation: 30, correct_key: 'n'},
+        {reflected:true, orientation: 60, correct_key: 'n'},
+        {reflected:true, orientation: 90, correct_key: 'n'},
+        {reflected:true, orientation: 120, correct_key: 'n'},
+        {reflected:true, orientation: 150, correct_key: 'n'},
+        {reflected:true, orientation: 180, correct_key: 'n'},
+        {reflected:false, orientation: 30, correct_key: 'y'},
+        {reflected:false, orientation: 60, correct_key: 'y'},
+        {reflected:false, orientation: 90, correct_key: 'y'},
+        {reflected:false, orientation: 120, correct_key: 'y'},
+        {reflected:false, orientation: 150, correct_key: 'y'},
+        {reflected:false, orientation: 180, correct_key: 'y'},
+      ]
 
       var box_trial_1 = {
           type: 'boxes',
           grid_rows: 4,
           grid_cols: 4,
           filled_in_reference: shape,
-          both_new: true,
+          both_new: false,
+          clearboth: false,
           square_size: 50,
           rotation_reference: 0,
-          filled_in_target: jsPsych.plugins["boxes"].reflectShape(shape),
-          rotation_target: 0,
-          correct_match: 'n',
-      };
-      timeline.push(box_trial_1);
+          reflected:jsPsych.timelineVariable("reflected"),
+          rotation_target: jsPsych.timelineVariable("orientation"),
+          correct_match: jsPsych.timelineVariable("correct_key"),
 
+      };
+      // create variable for number of correct responses
+
+      var box_trials = {
+        timeline: [box_trial_1],
+        timeline_variables: trials,
+        sample: {
+          type: 'without-replacement',
+          size: 1
+        },
+
+        loop_function: function(data){
+          console.log(data.values()[0].correct);
+          return true; // to continue ( < 5 correct)
+          //return false; // if they are done (5 correct)
+        }
+      }
+
+      timeline.push(box_trials);
       //var shape = create_shape(4,4,10);
       //var reflected_shape = reflect(shape);
 
