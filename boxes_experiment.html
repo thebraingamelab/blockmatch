@@ -45,6 +45,7 @@
 
       };
       // create variable for number of correct responses
+      correct_response = 0
 
       var box_trials = {
         timeline: [box_trial_1],
@@ -55,8 +56,19 @@
         },
 
         loop_function: function(data){
+          
+          if (data.values()[0].correct){
+            correct_response++
+          }
           console.log(data.values()[0].correct);
-          return true; // to continue ( < 5 correct)
+          if (correct_response < 5) {
+            return true
+          } else {
+            return false
+            }
+
+
+          // return true; // to continue ( < 5 correct)
           //return false; // if they are done (5 correct)
         }
       }
