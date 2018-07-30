@@ -15,18 +15,85 @@
         }
 
         #progress{
-          height: 120px; 
+          height: 120px;
           width: 600px;
+          border: 1px solid black;
           position: fixed;
-          background-color: green;
+          background-color: darkcyan;
           bottom: 0;
-          left: calc(50% - 300px)
+          left: calc(50% - 300px);
+          font-size: 18px;
+          text-decoration: underline;
+          text-align: center;
+        }
+
+        .circle_1{
+          height: 50px;
+          width: 50px;
+          background-color: #cccccc;
+          border: 1px solid black;
+          border-radius: 50%;
+          display: inline-block;
+          position: absolute;
+          bottom: 25px;
+          left: 125px;
+        }
+
+        .circle_2{
+          height: 50px;
+          width: 50px;
+          background-color: #cccccc;
+          border: 1px solid black;
+          border-radius: 50%;
+          display: inline-block;
+          position: absolute;
+          bottom: 25px;
+          left: 200px;
+        }
+        .circle_3{
+          height: 50px;
+          width: 50px;
+          background-color: #cccccc;
+          border: 1px solid black;
+          border-radius: 50%;
+          display: inline-block;
+          position: absolute;
+          bottom: 25px;
+          left: 275px;
+        }
+        .circle_4{
+          height: 50px;
+          width: 50px;
+          background-color: #cccccc;
+          border: 1px solid black;
+          border-radius: 50%;
+          display: inline-block;
+          position: absolute;
+          bottom: 25px;
+          left: 350px;
+        }
+        .circle_5{
+          height: 50px;
+          width: 50px;
+          background-color: #cccccc;
+          border: 1px solid black;
+          border-radius: 50%;
+          display: inline-block;
+          position: absolute;
+          bottom: 25px;
+          left: 425px;
         }
         </style>
       </head>
       <body>
         <div id="experiment"></div>
-        <div id="progress"></div>
+        <div id="progress"><b>Progress Bar: Round</b>
+        <span class= "circle_1"></span>
+        <span class= "circle_2"></span>
+        <span class= "circle_3"></span>
+        <span class= "circle_4"></span>
+        <span class= "circle_5"></span>
+      </div>
       </body>
       <script>
 
