@@ -7,13 +7,36 @@
         <script src="jspsych-boxes.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-image-keyboard-response.js"></script>
         <link href="jspsych-6.0.4/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+        <style>
+        html, body, #experiment {
+          margin: 0;
+          width: 100%;
+          height: 100%
+        }
+
+        #progress{
+          height: 120px; 
+          width: 600px;
+          position: fixed;
+          background-color: green;
+          bottom: 0;
+          left: calc(50% - 300px)
+        }
+        </style>
       </head>
-      <body></body>
+      <body>
+        <div id="experiment"></div>
+        <div id="progress"></div>
+      </body>
       <script>
 
       var timeline = [];
 
-      var shape = jsPsych.plugins["boxes"].generateShape(4,4,8)
+      var number_of_rounds = 4;
+
+      var correct_responses_per_round = 3;
+
+      var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
 
       var trials = [
         {reflected:true, orientation: 30, correct_key: 'n'},
@@ -30,22 +53,29 @@
         {reflected:false, orientation: 180, correct_key: 'y'},
       ]
 
+      var both_new = true
       var box_trial_1 = {
           type: 'boxes',
           grid_rows: 4,
           grid_cols: 4,
-          filled_in_reference: shape,
-          both_new: false,
-          clearboth: false,
+          filled_in_reference: function() {return shape},
+          both_new: function() {return both_new},
+          clearboth: function () {return correct_response==correct_responses_per_round-1},
           square_size: 50,
           rotation_reference: 0,
           reflected:jsPsych.timelineVariable("reflected"),
           rotation_target: jsPsych.timelineVariable("orientation"),
           correct_match: jsPsych.timelineVariable("correct_key"),
+          on_finish: function(){
+            both_new = false
+          }
 
       };
       // create variable for number of correct responses
       correct_response = 0
+
+      rounds_completed= 0
+
 
       var box_trials = {
         timeline: [box_trial_1],
@@ -56,20 +86,24 @@
         },
 
         loop_function: function(data){
-          
+
           if (data.values()[0].correct){
             correct_response++
           }
           console.log(data.values()[0].correct);
-          if (correct_response < 5) {
+          if (correct_response < correct_responses_per_round) {
             return true
           } else {
-            return false
+            rounds_completed++
+            if(rounds_completed < number_of_rounds){
+              shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
+              correct_response = 0
+              both_new = true
+              return true
+            } else {
+              return false
             }
-
-
-          // return true; // to continue ( < 5 correct)
-          //return false; // if they are done (5 correct)
+            }
         }
       }
 
@@ -77,32 +111,11 @@
       //var shape = create_shape(4,4,10);
       //var reflected_shape = reflect(shape);
 
-      var box_trial_2 = {
-          type: 'boxes',
-          grid_rows: 4,
-          grid_cols: 4,
-          filled_in_reference: [
-            [false, false, false, true],
-            [false, false, true, false],
-            [false, false, true, false],
-            [false, true, false, false]
-          ],
-          both_new: false,
-          square_size: 50,
-          rotation_reference: 0,
-          filled_in_target: [
-            [false, false, false, true],
-            [false, false, true, false],
-            [false, false, true, false],
-            [false, true, false, false]
-          ],
-          rotation_target: 0,
-          correct_match: 'y',
-        };
-        timeline.push(box_trial_2);
+
 
       jsPsych.init({
-        timeline: timeline
+        timeline: timeline,
+        display_element: 'experiment'
       });
       </script>
 </html>

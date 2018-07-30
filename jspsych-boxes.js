@@ -5,6 +5,18 @@ jsPsych.plugins['boxes'] = (function(){
   plugin.info = {
     name: 'boxes',
     parameters: {
+      filled_in_reference: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        default: undefined
+      },
+      both_new: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        default: undefined
+      },
+      clearboth: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        default: undefined
+      }
     }
   }
 
@@ -17,9 +29,9 @@ jsPsych.plugins['boxes'] = (function(){
         css_content+= ".start_animation {animation: change_color .5s;}"
         css_content+= "@keyframes intro {0% {top:0px; transform: translateY(-1000px); }100% {top:0px;  transform:translateY(0px); }}"
         css_content+= ".start_intro_animation {animation: intro .5s;}"
-        css_content+= ".around_boxes { position: relative; width:800px; height:300px; top: calc(50% - 150px); left: calc(50% - 400px); } "
-        css_content+= "#inside_box_1 { position:absolute; width:300px; height:300px; left: 0px;  border: 1px solid black;  background-color: brown;}"
-        css_content+= "#inside_box_2 { position:absolute; width:300px; height:300px; right: 0px; border: 1px solid black; background-color: brown;} "
+        css_content+= ".around_boxes { position: relative; width:800px; height:350px; top: calc(50% - 175px); left: calc(50% - 400px); } "
+        css_content+= "#inside_box_1 { position:absolute; width:350px; height:350px; left: 0px;  border: 1px solid black;  background-color: brown;}"
+        css_content+= "#inside_box_2 { position:absolute; width:350px; height:350px; right: 0px; border: 1px solid black; background-color: brown;} "
         css_content+= "</style>"
     display_element.innerHTML = css_content;
 
@@ -74,18 +86,19 @@ jsPsych.plugins['boxes'] = (function(){
           end();
         })
         document.querySelector('#inside_box_2').className = "start_animation";
-        if(trial.clearboth){
-          document.querySelector('#inside_box_1').className = "start_animation";
-        }
+
         if(correct_match == 'n'){
 
-          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:20%; display:block; margin: auto; ">');
+          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:12%; display:block; margin: auto; ">');
           wAudio.play();
           correct = true;
+          if(trial.clearboth){
+            document.querySelector('#inside_box_1').className = "start_animation";
+          }
         }
         if (correct_match == 'y'){
 
-          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:20%; display:block; margin: auto; ">');
+          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:12%; display:block; margin: auto; ">');
           lAudio.play();
           correct = false;
         }
@@ -95,17 +108,18 @@ jsPsych.plugins['boxes'] = (function(){
           end();
         })
         document.querySelector('#inside_box_2').className = "start_animation";
-        if(trial.clearboth){
-          document.querySelector('#inside_box_1').className = "start_animation";
-        }
+
         if(correct_match == 'y'){
-          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:20%; display:block; margin: auto; ">');
+          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:12%; display:block; margin: auto; ">');
           wAudio.play();
           correct = true;
+          if(trial.clearboth){
+            document.querySelector('#inside_box_1').className = "start_animation";
+          }
         }
         if(correct_match == 'n'){
 
-          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:20%; display:block; margin: auto; ">');
+          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:12%; display:block; margin: auto; ">');
           lAudio.play();
           correct = false;
         }
@@ -184,6 +198,148 @@ jsPsych.plugins['boxes'] = (function(){
         grid[row][col] = true;
       }
       return grid;
+  }
+
+  plugin.generateFullShape=function(nrows, ncols, fill){
+    var shape= plugin.generateShape(nrows, ncols, fill)
+     while(check_full(shape)== false ||
+     JSON.stringify(plugin.rotateShape90(shape))== JSON.stringify(shape) ||
+     JSON.stringify(plugin.rotateShape180(shape))== JSON.stringify(shape) ||
+     JSON.stringify(plugin.rotateShape270(shape))== JSON.stringify(shape) ||
+     JSON.stringify(plugin.rotateShape90(plugin.reflectShape(shape)))== JSON.stringify(shape) ||
+     JSON.stringify(plugin.rotateShape180(plugin.reflectShape(shape)))== JSON.stringify(shape) ||
+     JSON.stringify(plugin.rotateShape270(plugin.reflectShape(shape)))== JSON.stringify(shape))
+     {
+
+       shape = plugin.generateShape(nrows, ncols, fill)
+     }
+     return shape
+  };
+
+  function check_full(shape){
+    var low= null;
+    var high= null;
+    var nrows= shape.length;
+    var ncols= shape[0].length;
+    var row = 0
+    var bad_shape = true;
+    for(i=0; i < ncols; i++){
+      if(shape[row][i]){
+        bad_shape = false
+      }
+    }
+    if(bad_shape){
+      return false
+    }
+
+    var row = nrows - 1
+    var bad_shape = true;
+    for(i=0; i < ncols; i++){
+      if(shape[row][i]){
+        bad_shape = false
+      }
+    }
+    if(bad_shape){
+      return false
+    }
+
+    var col = 0
+    var bad_shape = true;
+    for(i=0; i < nrows; i++){
+      if(shape[i][col]){
+        bad_shape = false
+      }
+    }
+    if(bad_shape){
+      return false
+    }
+
+    var col = ncols - 1
+    var bad_shape = true;
+    for(i=0; i < nrows; i++){
+      if(shape[i][col]){
+        bad_shape = false
+      }
+    }
+    if(bad_shape){
+      return false
+    }
+
+    return true
+  }
+
+  plugin.rotateShape180=function(shape){
+
+    var nrows= shape.length;
+    var ncols= shape[0].length;
+    var max_rows= shape.length - 1;
+    var max_cols= shape[0].length - 1;
+
+    var grid= [];
+
+    for(i=0; i < nrows; i++){
+      grid[i]=[]
+      for(j=0; j< ncols; j++){
+        grid[i][j]= false
+      }
+    }
+    for(i=0; i < nrows; i++){
+      for(j=0; j< ncols; j++){
+        var new_col= max_cols - j
+        var new_row= max_rows - i;
+        grid[new_row][new_col]= shape[i][j];
+      }
+    }
+    return grid;
+  }
+  plugin.rotateShape90=function(shape){
+
+    var nrows= shape.length;
+    var ncols= shape[0].length;
+    var max_rows= shape.length - 1;
+    var max_cols= shape[0].length - 1;
+
+    var grid= [];
+
+    for(i=0; i < nrows; i++){
+      grid[i]=[]
+      for(j=0; j< ncols; j++){
+        grid[i][j]= false
+      }
+    }
+    for(i=0; i < nrows; i++){
+      for(j=0; j< ncols; j++){
+        var new_col= max_rows - i
+        var new_row= j;
+        grid[new_row][new_col]= shape[i][j];
+      }
+    }
+    return grid;
+  }
+
+  plugin.rotateShape270=function(shape){
+
+    var nrows= shape.length;
+    var ncols= shape[0].length;
+    var max_rows= shape.length - 1;
+    var max_cols= shape[0].length - 1;
+
+    var grid= [];
+
+    for(i=0; i < nrows; i++){
+      grid[i]=[]
+      for(j=0; j< ncols; j++){
+        grid[i][j]= false
+      }
+    }
+    for(i=0; i < nrows; i++){
+      for(j=0; j< ncols; j++){
+        var new_col= i
+        var new_row= max_cols - j;
+        grid[new_row][new_col]= shape[i][j];
+      }
+    }
+    return grid;
   }
 
   plugin.reflectShape=function(shape){
