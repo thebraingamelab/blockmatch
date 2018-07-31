@@ -22,86 +22,67 @@
           background-color: darkcyan;
           bottom: 0;
           left: calc(50% - 300px);
-          font-size: 18px;
-          text-decoration: underline;
-          text-align: center;
         }
-
-        .circle_1{
+         .text{
+           font-size: 18px;
+           /* text-decoration: underline; */
+           text-align: center;
+           font-weight: bold;
+         }
+        .circle{
           height: 50px;
           width: 50px;
           background-color: #cccccc;
           border: 1px solid black;
           border-radius: 50%;
           display: inline-block;
-          position: absolute;
-          bottom: 25px;
+          margin: 10px;
+        }
+        /* #circle_1{
           left: 125px;
         }
 
-        .circle_2{
-          height: 50px;
-          width: 50px;
-          background-color: #cccccc;
-          border: 1px solid black;
-          border-radius: 50%;
-          display: inline-block;
-          position: absolute;
-          bottom: 25px;
+        #circle_2{
           left: 200px;
         }
-        .circle_3{
-          height: 50px;
-          width: 50px;
-          background-color: #cccccc;
-          border: 1px solid black;
-          border-radius: 50%;
-          display: inline-block;
-          position: absolute;
-          bottom: 25px;
+
+        #circle_3{
           left: 275px;
         }
-        .circle_4{
-          height: 50px;
-          width: 50px;
-          background-color: #cccccc;
-          border: 1px solid black;
-          border-radius: 50%;
-          display: inline-block;
-          position: absolute;
-          bottom: 25px;
+
+        #circle_4{
           left: 350px;
         }
-        .circle_5{
-          height: 50px;
-          width: 50px;
-          background-color: #cccccc;
-          border: 1px solid black;
-          border-radius: 50%;
-          display: inline-block;
-          position: absolute;
-          bottom: 25px;
+
+        #circle_5{
           left: 425px;
-        }
+        } */
         </style>
       </head>
       <body>
         <div id="experiment"></div>
-        <div id="progress"><b>Progress Bar: Round</b>
-        <span class= "circle_1"></span>
-        <span class= "circle_2"></span>
-        <span class= "circle_3"></span>
-        <span class= "circle_4"></span>
-        <span class= "circle_5"></span>
+        <div id="progress" class="text">
+          <b>Progress Bar: </b>
+        <span id= "round" class= "text">  </span>
+        <span id= "total" class= "text">  </span>
+        <div id= "circle_container"></div>
       </div>
       </body>
       <script>
 
       var timeline = [];
 
-      var number_of_rounds = 4;
+      var number_of_rounds = 3;
 
       var correct_responses_per_round = 3;
+
+      var circle_html= ""
+
+      for(i=0; i < correct_responses_per_round; i++){
+        circle_html+= "<span class= 'circle'></span> "
+
+      }
+      document.querySelector('#circle_container').innerHTML= circle_html;
 
       var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
 
@@ -127,7 +108,7 @@
           grid_cols: 4,
           filled_in_reference: function() {return shape},
           both_new: function() {return both_new},
-          clearboth: function () {return correct_response==correct_responses_per_round-1},
+          clearboth: function () {return correct_response==correct_responses_per_round - 1},
           square_size: 50,
           rotation_reference: 0,
           reflected:jsPsych.timelineVariable("reflected"),
@@ -143,6 +124,8 @@
 
       rounds_completed= 0
 
+      document.querySelector('#round').innerHTML = "Round "+(rounds_completed+1)+" "
+      document.querySelector('#total').innerHTML = "of "+number_of_rounds+" "
 
       var box_trials = {
         timeline: [box_trial_1],
@@ -159,15 +142,29 @@
           }
           console.log(data.values()[0].correct);
           if (correct_response < correct_responses_per_round) {
+          var matches=  document.querySelectorAll('.circle')
+              for(i=0; i < matches.length; i++){
+                if(i < correct_response){
+                  matches[i].style="background-color: purple"
+                }
+              }
             return true
           } else {
             rounds_completed++
             if(rounds_completed < number_of_rounds){
+              document.querySelector('#round').innerHTML = "Round "+(rounds_completed+1)+" "
+              document.querySelector('#total').innerHTML = "of "+number_of_rounds+" "
               shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
               correct_response = 0
               both_new = true
+              var matches=  document.querySelectorAll('.circle')
+                  for(i=0; i < matches.length; i++){
+                    // if(i > correct_response){
+                      matches[i].style="background-color: #cccccc"
+                  }
               return true
             } else {
+              document.querySelector('#progress').remove()
               return false
             }
             }
@@ -175,11 +172,6 @@
       }
 
       timeline.push(box_trials);
-      //var shape = create_shape(4,4,10);
-      //var reflected_shape = reflect(shape);
-
-
-
       jsPsych.init({
         timeline: timeline,
         display_element: 'experiment'

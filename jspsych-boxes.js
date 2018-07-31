@@ -24,7 +24,6 @@ jsPsych.plugins['boxes'] = (function(){
 
     var css_content = "<style>"
         css_content+= ".boxes-big-container { height: 100vh; overflow: hidden; }"
-        // css_content+= "body {overflow: hidden;}"
         css_content+= "@keyframes change_color {0% {top:0px; background-color: darkcyan; opacity: 1} 100% {top:500px; background-color: pink; opacity: 0}} "
         css_content+= ".start_animation {animation: change_color .5s;}"
         css_content+= "@keyframes intro {0% {top:0px; transform: translateY(-1000px); }100% {top:0px;  transform:translateY(0px); }}"
@@ -41,8 +40,6 @@ jsPsych.plugins['boxes'] = (function(){
         html_content+= "<div id='inside_box_2'> </div>"
         html_content += "</div>"
         html_content += "</div>"
-
-
     display_element.innerHTML += html_content;
 
 
@@ -56,8 +53,8 @@ jsPsych.plugins['boxes'] = (function(){
     var html= createSquares(grid_cols, grid_rows, square_size, rotation_reference, filled_in_reference);
     var html_2= createSquares(grid_cols, grid_rows, square_size, rotation_target, filled_in_target);
 
-    document.querySelector('#inside_box_1').innerHTML= html
-    document.querySelector('#inside_box_2').innerHTML= html_2
+    document.querySelector('#inside_box_1').innerHTML= html;
+    document.querySelector('#inside_box_2').innerHTML= html_2;
 
 
     var both_new = trial.both_new;
@@ -124,7 +121,6 @@ jsPsych.plugins['boxes'] = (function(){
           correct = false;
         }
       }
-
     }, {once:true});
 
     function end(){
@@ -132,8 +128,6 @@ jsPsych.plugins['boxes'] = (function(){
         correct: correct
       })
     }
-
-
   }
 
   function createSquares(grid_cols, grid_rows, square_size, rotation, filled_in, position_left) {
@@ -154,6 +148,7 @@ jsPsych.plugins['boxes'] = (function(){
   }
 
   plugin.generateShape=function(nrows, ncols, fill){
+
       var grid = [];
       // create an array with rows*cols values, and fill of them are true.
       var total_spots = nrows * ncols;
@@ -194,14 +189,14 @@ jsPsych.plugins['boxes'] = (function(){
             }
           }
         }
-
         grid[row][col] = true;
       }
       return grid;
   }
 
   plugin.generateFullShape=function(nrows, ncols, fill){
-    var shape= plugin.generateShape(nrows, ncols, fill)
+
+    var shape= plugin.generateShape(nrows, ncols, fill);
      while(check_full(shape)== false ||
      JSON.stringify(plugin.rotateShape90(shape))== JSON.stringify(shape) ||
      JSON.stringify(plugin.rotateShape180(shape))== JSON.stringify(shape) ||
@@ -209,10 +204,11 @@ jsPsych.plugins['boxes'] = (function(){
      JSON.stringify(plugin.rotateShape90(plugin.reflectShape(shape)))== JSON.stringify(shape) ||
      JSON.stringify(plugin.rotateShape180(plugin.reflectShape(shape)))== JSON.stringify(shape) ||
      JSON.stringify(plugin.rotateShape270(plugin.reflectShape(shape)))== JSON.stringify(shape))
-     {
 
-       shape = plugin.generateShape(nrows, ncols, fill)
+     {
+       shape = plugin.generateShape(nrows, ncols, fill);
      }
+
      return shape
   };
 
@@ -221,51 +217,51 @@ jsPsych.plugins['boxes'] = (function(){
     var high= null;
     var nrows= shape.length;
     var ncols= shape[0].length;
-    var row = 0
+    var row = 0;
     var bad_shape = true;
     for(i=0; i < ncols; i++){
       if(shape[row][i]){
-        bad_shape = false
+        bad_shape = false;
       }
     }
     if(bad_shape){
       return false
     }
 
-    var row = nrows - 1
+    var row = nrows - 1;
     var bad_shape = true;
     for(i=0; i < ncols; i++){
       if(shape[row][i]){
-        bad_shape = false
+        bad_shape = false;
       }
     }
     if(bad_shape){
-      return false
+      return false;
     }
 
-    var col = 0
+    var col = 0;
     var bad_shape = true;
     for(i=0; i < nrows; i++){
       if(shape[i][col]){
-        bad_shape = false
+        bad_shape = false;
       }
     }
     if(bad_shape){
-      return false
+      return false;
     }
 
-    var col = ncols - 1
+    var col = ncols - 1;
     var bad_shape = true;
     for(i=0; i < nrows; i++){
       if(shape[i][col]){
-        bad_shape = false
+        bad_shape = false;
       }
     }
     if(bad_shape){
-      return false
+      return false;
     }
 
-    return true
+    return true;
   }
 
   plugin.rotateShape180=function(shape){
@@ -285,13 +281,14 @@ jsPsych.plugins['boxes'] = (function(){
     }
     for(i=0; i < nrows; i++){
       for(j=0; j< ncols; j++){
-        var new_col= max_cols - j
+        var new_col= max_cols - j;
         var new_row= max_rows - i;
         grid[new_row][new_col]= shape[i][j];
       }
     }
     return grid;
   }
+
   plugin.rotateShape90=function(shape){
 
     var nrows= shape.length;
