@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
+      <meta charset="utf-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>My Experiment</title>
         <script src="jspsych-6.0.4/jspsych.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-html-keyboard-response.js"></script>
         <script src="jspsych-boxes.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-image-keyboard-response.js"></script>
+        <script src="jspsych-6.0.4/plugins/jspsych-html-button-response.js"></script>
+        <script src="jspsych-6.0.4/plugins/jspsych-survey-multi-choice.js"></script>
+        <script src="jspsych-6.0.4/plugins/jspsych-survey-text.js"></script>
+        <script src="jspsych-6.0.4/plugins/jspsych-survey-multi-select.js"></script>
         <link href="jspsych-6.0.4/css/jspsych.css" rel="stylesheet" type="text/css"></link>
         <style>
         html, body, #experiment {
           margin: 0;
           width: 100%;
-          height: 100%
+          height: 100%;
+        }
+
+        body{
+          background-color: white;
         }
 
         #progress{
@@ -22,10 +32,10 @@
           background-color: darkcyan;
           bottom: 0;
           left: calc(50% - 300px);
+          visibility: hidden;
         }
          .text{
            font-size: 18px;
-           /* text-decoration: underline; */
            text-align: center;
            font-weight: bold;
          }
@@ -38,25 +48,6 @@
           display: inline-block;
           margin: 10px;
         }
-        /* #circle_1{
-          left: 125px;
-        }
-
-        #circle_2{
-          left: 200px;
-        }
-
-        #circle_3{
-          left: 275px;
-        }
-
-        #circle_4{
-          left: 350px;
-        }
-
-        #circle_5{
-          left: 425px;
-        } */
         </style>
       </head>
       <body>
@@ -72,6 +63,34 @@
 
       var timeline = [];
 
+      var welcome ={
+        type: 'html-button-response',
+        stimulus: "<p> This is a research project conducted at Vassar College. " +
+        "In this experiment you will play a</p><p>computer game that is "+
+        "designed to measure aspects of your cognition; such as attention, "+
+        "memory,</p><p>and learning. We will record data about how you play, "+
+        "such as what keys you pressed or where</p><p>you clicked. The "+
+        "experiment will take approximately [X] minutes to complete. You will "+
+        "recieve</p><p>a payment of [$X] upon completion of the experiment. "+
+        "The data we collect will be used for</p><p>research purposes. We do "+
+        "not collect any personally identifying information, so your data is"+
+        "</p><p>anonymous. You are free to stop the experiment by closing "+
+        "your browser window at any time. If</p><p>you have any questions, you "+
+        "can contact the researchers through Prolific's messaging system.</p>"+
+        "<p></p><p> By clicking 'I agree', you affirm that you are at least "+
+        "18 years of age, which is the minimum age</p><p>to participate in "+
+        "this study, and that you understand the nature of your participation "+
+        "in this</p><p>research. If you do not wish to participate, please "+
+        "close this window.</p>",
+        choices: ["I agree"],
+        button_html: '<button class="jspsych-btn">%choice%</button>',
+        on_finish: function(){
+          document.querySelector('#progress').style.visibility= "visible"
+        }
+      };
+      timeline.push(welcome);
+
+
       var number_of_rounds = 3;
 
       var correct_responses_per_round = 3;
@@ -79,7 +98,7 @@
       var circle_html= ""
 
       for(i=0; i < correct_responses_per_round; i++){
-        circle_html+= "<span class= 'circle'></span> "
+        circle_html+= "<span class= 'circle'></span>"
 
       }
       document.querySelector('#circle_container').innerHTML= circle_html;
@@ -172,6 +191,50 @@
       }
 
       timeline.push(box_trials);
+
+     var survey1 ={
+         type: 'survey-text',
+         questions:[{prompt:"<p>What is your age?</p>"},
+         {prompt:"<p>What is your gender?</p>"},{prompt:"<p>In the past week, how"+
+       " many hours have you played video games of any kind?</p>"}]
+        };
+     timeline.push(survey1);
+
+     var survey2 ={
+       type: 'survey-multi-select',
+       questions:[{prompt:"<p>Which of the following platform(s) have you played games on in the past week?</p>",
+       options:['Mobile','Desktop/Laptop Web Browser', 'Facebook'],
+       horizontal: true}]
+        };
+     timeline.push(survey2);
+
+     var survey3 ={
+         type: 'survey-multi-choice',
+         questions: [{prompt: "<p> if this game were available for free, how likely would you be to play it again?</p>",
+         options:['Would not play again', 'Not sure', 'Would play again'], horizontal: true},
+         {prompt:"<p>if you could see how your scores compare to those around the world, would that motivate you to play it?</p>",
+         options:['would not motivate me','Not sure','Would motivate me'], horizontal: true},
+         {prompt:"<p>If you could see how your scores compare to people similar to you (similar age and/or location), would that motivate you to play it?</p>",
+         options:['would not motivate me','Not sure','Would motivate me'], horizontal: true},
+         {prompt:"<p>If you could see how your scores change over time to track your improvement, would that motivate you to play it?</p>",
+         options:['would not motivate me','Not sure','Would motivate me'], horizontal: true}]
+         };
+    timeline.push(survey3);
+
+    var survey4 ={
+        type: 'survey-text',
+        questions:[{prompt:"<p>Is there any other feedback you would like to give? (Aspects of the game that you did or did not like, parts of the instructions that were confusing, technical problems, or anything else that you’d like to share).</p>",
+         ows: 4}, {prompt: "<p>Did you notice any bugs/glitches?</p>", rows:4}]
+       };
+   timeline.push(survey4);
+
+   var payment ={
+     type: 'html-keyboard-response',
+     stimulus: "<p>Here is your payment</p>",
+     choices: jsPsych.NO_KEYS
+   };
+   timeline.push(payment);
+
       jsPsych.init({
         timeline: timeline,
         display_element: 'experiment'
