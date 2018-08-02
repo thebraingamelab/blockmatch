@@ -106,14 +106,15 @@
           square_size: 50,
           rotation_reference: 0,
           reflected: true,
-          rotation_target: 45,
+          rotation_target: 150,
           correct_match: 'n',
           dialog: ["<p><b>Welcome!</b></p> <p>For this experiment, you will be playing a game that deals "+
           "with matching shapes. </p>",
+          " <p>The shape in the red box on the left will be shown at different angles "+
+          "in the red box on the right for each section in the round.</p> "+
           "<p> Your task is to determine whether the shape on the right is the <b>same or a mirror image</b> "+
-          "of the shape on the left</p> <p>The shape in the red box on the left (the reference image) will be shown at different angles "+
-          "in the red box on the right side of the screen for each section in the round.</p> ",
-          "<p> If the shape on the right is the mirrored image of the shape on the left, it is an incorrect match. </p>"+
+          "of the shape on the left.</p>",
+          "<p> If the shape on the right is a mirror image of the shape on the left, it is an incorrect match. </p>"+
           "<p>A <b> correct match </b> would be if the shape on the right is <b>not</b> a mirror image of the shape on the left.</p> ",
           "<p> For this set, the shape on the right is a mirror image, so it would be considered an <b>incorrect match</b>. Please press the <b>'N'</b> key!</p>"],
 
@@ -136,10 +137,10 @@
           square_size: 50,
           rotation_reference: 0,
           reflected: false,
-          rotation_target: 45,
+          rotation_target: 90,
           correct_match: 'y',
           dialog: ["<p>For shapes that are not mirrored, they will be considered a <b>correct match</b>! "+
-          "For this set, the shape on the right is not a reflection, please press the <b>'Y'</b> key!</p>"],
+          "For this set, the shape on the right is not a mirror image, please press the <b>'Y'</b> key!</p>"],
         //   on_finish: function(){
         //     document.querySelector('#progress').style.visibility= "visible"
         // },
