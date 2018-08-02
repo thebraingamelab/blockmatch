@@ -16,7 +16,11 @@ jsPsych.plugins['boxes'] = (function(){
       clearboth: {
         type: jsPsych.plugins.parameterType.BOOL,
         default: undefined
-      }
+      },
+      dialog: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        default: null
+      },
     }
   }
 
@@ -31,6 +35,7 @@ jsPsych.plugins['boxes'] = (function(){
         css_content+= ".around_boxes { position: relative; width:800px; height:350px; top: calc(50% - 175px); left: calc(50% - 400px); } "
         css_content+= "#inside_box_1 { position:absolute; width:350px; height:350px; left: 0px;  border: 1px solid black;  background-color: brown;}"
         css_content+= "#inside_box_2 { position:absolute; width:350px; height:350px; right: 0px; border: 1px solid black; background-color: brown;} "
+        css_content+= ".dialog { position: absolute; width: 400px; height: 300px; border: 1px solid black; background-color: darkcyan; top: calc(50% - 150px); left: calc(50% - 200px)};"
         css_content+= "</style>"
     display_element.innerHTML = css_content;
 
@@ -40,7 +45,13 @@ jsPsych.plugins['boxes'] = (function(){
         html_content+= "<div id='inside_box_2'> </div>"
         html_content += "</div>"
         html_content += "</div>"
+        if(trial.dialog!==null){
+          html_content+= "<div class= 'dialog'><div id='dialog_text'> "+trial.dialog[0]+"</div>"
+          html_content+= "<button id= 'dialog_button'>Continue</button>"
+          html_content+= "</div>"
+        }
     display_element.innerHTML += html_content;
+
 
 
     var grid_cols= trial.grid_cols;
@@ -56,6 +67,7 @@ jsPsych.plugins['boxes'] = (function(){
     document.querySelector('#inside_box_1').innerHTML= html;
     document.querySelector('#inside_box_2').innerHTML= html_2;
 
+    var current_page= 0
 
     var both_new = trial.both_new;
     var correct_match = trial.correct_match;
@@ -73,55 +85,73 @@ jsPsych.plugins['boxes'] = (function(){
     }
     var correct = null;
 
-    document.addEventListener("keydown", function(e){
+    if(trial.dialog!== null){
 
-      if (e.keyCode==78){
-        document.querySelector('#inside_box_2').addEventListener("animationend", function(){
-          display_element.innerHTML = "";
-          if(correct_response <= 5){
+    document.querySelector('#dialog_button').addEventListener("click",function(){
+      if(trial.dialog.length==current_page + 1){
+      document.querySelector('.dialog').remove()
+      addKeyListener()
+    } else {
+      current_page++
+      document.querySelector('#dialog_text').innerHTML=trial.dialog[current_page]
+    }
+    })
+  } else {
+    addKeyListener()
+  }
+    function addKeyListener(){
+      document.addEventListener("keydown", function(e){
+
+        if (e.keyCode==78){
+          document.querySelector('#inside_box_2').addEventListener("animationend", function(){
+            display_element.innerHTML = "";
+            if(correct_response <= 5){
+            }
+            end();
+          })
+          document.querySelector('#inside_box_2').className = "start_animation";
+
+          if(correct_match == 'n'){
+
+            document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:12%; display:block; margin: auto; ">');
+            wAudio.play();
+            correct = true;
+            if(trial.clearboth){
+              document.querySelector('#inside_box_1').className = "start_animation";
+            }
           }
-          end();
-        })
-        document.querySelector('#inside_box_2').className = "start_animation";
+          if (correct_match == 'y'){
 
-        if(correct_match == 'n'){
+            document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:12%; display:block; margin: auto; ">');
+            lAudio.play();
+            correct = false;
+          }
+        } else if( e.keyCode == 89){
+          document.querySelector('#inside_box_2').addEventListener("animationend", function(){
+            display_element.innerHTML = "";
+            end();
+          })
+          document.querySelector('#inside_box_2').className = "start_animation";
 
-          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:12%; display:block; margin: auto; ">');
-          wAudio.play();
-          correct = true;
-          if(trial.clearboth){
-            document.querySelector('#inside_box_1').className = "start_animation";
+          if(correct_match == 'y'){
+            document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:12%; display:block; margin: auto; ">');
+            wAudio.play();
+            correct = true;
+            if(trial.clearboth){
+              document.querySelector('#inside_box_1').className = "start_animation";
+            }
+          }
+          if(correct_match == 'n'){
+
+            document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:12%; display:block; margin: auto; ">');
+            lAudio.play();
+            correct = false;
           }
         }
-        if (correct_match == 'y'){
+      }, {once:true});
 
-          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:12%; display:block; margin: auto; ">');
-          lAudio.play();
-          correct = false;
-        }
-      } else if( e.keyCode == 89){
-        document.querySelector('#inside_box_2').addEventListener("animationend", function(){
-          display_element.innerHTML = "";
-          end();
-        })
-        document.querySelector('#inside_box_2').className = "start_animation";
+    }
 
-        if(correct_match == 'y'){
-          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="check.png" style="width:12%; display:block; margin: auto; ">');
-          wAudio.play();
-          correct = true;
-          if(trial.clearboth){
-            document.querySelector('#inside_box_1').className = "start_animation";
-          }
-        }
-        if(correct_match == 'n'){
-
-          document.querySelector('#inside_box_2').insertAdjacentHTML("afterend", '<img src="x.png" style="width:12%; display:block; margin: auto; ">');
-          lAudio.play();
-          correct = false;
-        }
-      }
-    }, {once:true});
 
     function end(){
       jsPsych.finishTrial({
