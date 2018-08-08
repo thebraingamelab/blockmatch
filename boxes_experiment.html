@@ -91,7 +91,7 @@
       timeline.push(welcome);
 
 
-    var  box_trial_tutorial_1 = {
+    var  box_trial_same_or_mirror_1 = {
           type: 'boxes',
           grid_rows: 4,
           grid_cols: 4,
@@ -106,20 +106,98 @@
           square_size: 50,
           rotation_reference: 0,
           reflected: true,
-          rotation_target: 150,
+          rotation_target: 0,
           correct_match: 'n',
-          dialog: ["<p><b>Welcome!</b></p> <p>For this experiment, you will be playing a game that deals "+
-          "with matching shapes. </p>",
-          " <p>The shape in the red box on the left will be shown at different angles "+
-          "in the red box on the right for each section in the round.</p> "+
-          "<p> Your task is to determine whether the shape on the right is the <b>same or a mirror image</b> "+
-          "of the shape on the left.</p>",
-          "<p> If the shape on the right is a mirror image of the shape on the left, it is an incorrect match. </p>"+
-          "<p>A <b> correct match </b> would be if the shape on the right is <b>not</b> a mirror image of the shape on the left.</p> ",
-          "<p> For this set, the shape on the right is a mirror image, so it would be considered an <b>incorrect match</b>. Please press the <b>'N'</b> key!</p>"],
+          dialog: ["<p><b>Welcome!</b></p> <p>For this experiment, you will only be using the <b>'N'</b> and <b>'Y'</b> keys. </p>",
+          "<p>For this game, your task will be to determine whether the shape on the <b>right</b> is the <b>same or a mirror image</b> of the shape on the <b>left</b>.</p> ",
+          "<p>If the shapes are the <b>same</b>, press the <b>'Y'</b> key. If they are <b>mirror images</b>, press the <b>'N'</b> key.</p> "],
+        };
+          timeline.push(box_trial_same_or_mirror_1);
+
+          var  box_trial_same_or_mirror_2= {
+                type: 'boxes',
+                grid_rows: 4,
+                grid_cols: 4,
+                filled_in_reference: [
+                [false, false, true, true],
+                [false, false, true, false],
+                [false, true, false, false],
+                [false, true, false, false]
+                ],
+                both_new: true,
+                clearboth: false,
+                square_size: 50,
+                rotation_reference: 0,
+                reflected: false,
+                rotation_target: 0,
+                correct_match: 'y',
+      };
+      timeline.push(box_trial_same_or_mirror_2);
+
+      var box_trial_rotate_1 = {
+          type: 'boxes',
+          grid_rows: 4,
+          grid_cols: 4,
+          filled_in_reference: [
+          [false, false, true, true],
+          [false, false, false, true],
+          [false, false, true, false],
+          [true, true, false, false]
+          ],
+          both_new: true,
+          clearboth: false,
+          square_size: 50,
+          rotation_reference: 0,
+          reflected: true,
+          rotation_target: 90,
+          correct_match: 'n',
+          dialog: ["<p> The shape on the right will now be shown at different angles to challenge you. "+
+          "Is the shape on the right the same as the shape on the left?</p> "],
+      };
+      timeline.push(box_trial_rotate_1);
+
+      var box_trial_rotate_2 = {
+          type: 'boxes',
+          grid_rows: 4,
+          grid_cols: 4,
+          filled_in_reference: [
+          [false, false, true, true],
+          [false, false, false, true],
+          [false, false, true, false],
+          [true, true, false, false]
+          ],
+          both_new: true,
+          clearboth: false,
+          square_size: 50,
+          rotation_reference: 0,
+          reflected: false,
+          rotation_target: 180,
+          correct_match: 'y',
+          dialog: ["<p> Is the shape on the right the same as the shape on the left? </p>"],
 
       };
+      timeline.push(box_trial_rotate_2);
 
+      var box_trial_tutorial_1 = {
+          type: 'boxes',
+          grid_rows: 4,
+          grid_cols: 4,
+          filled_in_reference: [
+          [false, false, false, true],
+          [false, false, false, true],
+          [false, true, true, true],
+          [true, true, false, false]
+          ],
+          both_new: true,
+          clearboth: false,
+          square_size: 50,
+          rotation_reference: 0,
+          reflected: false,
+          rotation_target: 180,
+          correct_match: 'y',
+          dialog: ["<p>Now try some on your own!</p>"],
+
+      };
       timeline.push(box_trial_tutorial_1);
 
       var box_trial_tutorial_2 = {
@@ -128,8 +206,8 @@
           grid_cols: 4,
           filled_in_reference: [
           [false, false, true, true],
-          [false, false, true, false],
-          [false, true, false, false],
+          [false, false, false, true],
+          [false, true, true, false],
           [false, true, false, false]
           ],
           both_new: true,
@@ -137,17 +215,30 @@
           square_size: 50,
           rotation_reference: 0,
           reflected: false,
-          rotation_target: 90,
+          rotation_target: 60,
           correct_match: 'y',
-          dialog: ["<p>For shapes that are not mirrored, they will be considered a <b>correct match</b>! "+
-          "For this set, the shape on the right is not a mirror image, please press the <b>'Y'</b> key!</p>"],
-        //   on_finish: function(){
-        //     document.querySelector('#progress').style.visibility= "visible"
-        // },
-
       };
-
       timeline.push(box_trial_tutorial_2);
+
+      var box_trial_tutorial_3 = {
+          type: 'boxes',
+          grid_rows: 4,
+          grid_cols: 4,
+          filled_in_reference: [
+          [false, false, true, true],
+          [false, false, false, true],
+          [false, true, true, false],
+          [false, true, false, false]
+          ],
+          both_new: true,
+          clearboth: false,
+          square_size: 50,
+          rotation_reference: 0,
+          reflected: true,
+          rotation_target: 30,
+          correct_match: 'n',
+      };
+      timeline.push(box_trial_tutorial_3);
 
       var congrats ={
         type: "html-button-response",
