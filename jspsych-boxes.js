@@ -27,17 +27,18 @@ jsPsych.plugins['boxes'] = (function(){
   plugin.trial = function(display_element, trial){
 
     var css_content = "<style>"
-        css_content+= ".boxes-big-container { height: 100vh; overflow: hidden; }"
+        css_content+= "html, body { background-color: black; }";
+        css_content+= ".boxes-big-container { height: 600px; width: 960px; position: relative; overflow: hidden; background-color: black; border-top: blue 6px solid; border-left: blue 6px solid; border-right: 6px solid orange; border-bottom: 6px solid orange; }"
+        css_content+= ".boxes-big-container:before { content: ''; position: absolute; pointer-events: none; z-index: 1; top: 0; left: 0; right: 0; bottom: 0; border-top: orange 6px solid; border-left: orange 6px solid; border-right: 6px solid blue; border-bottom: 6px solid blue; }"
         css_content+= "@keyframes change_color {0% {top:0px; background-color: darkcyan; opacity: 1} 100% {top:500px; background-color: pink; opacity: 0}} "
         css_content+= ".start_animation {animation: change_color .5s;}"
         css_content+= "@keyframes intro {0% {top:0px; transform: translateY(-1000px); }100% {top:0px;  transform:translateY(0px); }}"
         css_content+= ".start_intro_animation {animation: intro .5s;}"
         css_content+= ".around_boxes { position: relative; width:800px; height:350px; top: calc(50% - 175px); left: calc(50% - 400px); } "
-        css_content+= "#inside_box_1 { position:absolute; width:350px; height:350px; left: 0px;  border: 1px solid black;  background-color: brown;}"
-        css_content+= "#inside_box_2 { position:absolute; width:350px; height:350px; right: 0px; border: 1px solid black; background-color: brown;} "
+        css_content+= "#inside_box_1 { position:absolute; width:350px; height:350px; left: 0px;  }"
+        css_content+= "#inside_box_2 { position:absolute; width:350px; height:350px; right: 0px; } "
         css_content+= ".dialog { position: absolute; width: 400px; height: 300px; border: 1px solid black; background-color: darkcyan; top: calc(50% - 150px); left: calc(50% - 200px)};"
         css_content+= "</style>"
-    display_element.innerHTML = css_content;
 
     var html_content = "<div class='boxes-big-container'>"
         html_content +="<div class='around_boxes'>"
@@ -50,9 +51,7 @@ jsPsych.plugins['boxes'] = (function(){
           html_content+= "<button id= 'dialog_button'>Continue</button>"
           html_content+= "</div>"
         }
-    display_element.innerHTML += html_content;
-
-
+    display_element.innerHTML = css_content + html_content;
 
     var grid_cols= trial.grid_cols;
     var grid_rows= trial.grid_rows;
@@ -61,8 +60,8 @@ jsPsych.plugins['boxes'] = (function(){
     var rotation_target= trial.rotation_target;
     var filled_in_reference= trial.filled_in_reference;
     var filled_in_target = trial.reflected? plugin.reflectShape(trial.filled_in_reference): trial.filled_in_reference;
-    var html= createSquares(grid_cols, grid_rows, square_size, rotation_reference, filled_in_reference);
-    var html_2= createSquares(grid_cols, grid_rows, square_size, rotation_target, filled_in_target);
+    var html= createSquares(grid_cols, grid_rows, square_size, rotation_reference, filled_in_reference, 4);
+    var html_2= createSquares(grid_cols, grid_rows, square_size, rotation_target, filled_in_target, 4);
 
     document.querySelector('#inside_box_1').innerHTML= html;
     document.querySelector('#inside_box_2').innerHTML= html_2;
@@ -160,7 +159,7 @@ jsPsych.plugins['boxes'] = (function(){
     }
   }
 
-  function createSquares(grid_cols, grid_rows, square_size, rotation, filled_in, position_left) {
+  function createSquares(grid_cols, grid_rows, square_size, rotation, filled_in, padding) {
     var grid_width = square_size * grid_cols;
     var grid_height = square_size * grid_rows;
 
@@ -169,7 +168,7 @@ jsPsych.plugins['boxes'] = (function(){
      console.log('new row!')
       for(col=0; col < grid_cols; col++){
         if(filled_in[row][col] == true){
-          html+= "<div style='position:absolute; left:"+(col*square_size)+"px; top:"+(row*square_size)+"px; width:"+(square_size-2)+"px; height:"+(square_size-2)+"px; background-color: purple; border: 2px solid black'></div>"
+          html+= "<div style='position:absolute; left:"+(col*square_size)+"px; top:"+(row*square_size)+"px; width:"+(square_size-padding)+"px; height:"+(square_size-padding)+"px; background-color: white;'></div>"
         }
       }
     }

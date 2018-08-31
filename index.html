@@ -85,7 +85,7 @@
         choices: ["I agree"],
         button_html: '<button class="jspsych-btn">%choice%</button>',
       };
-      timeline.push(welcome);
+      //timeline.push(welcome);
 
 
     var  box_trial_same_or_mirror_1 = {
@@ -109,7 +109,7 @@
           "<p>For this game, your task will be to determine whether the shape on the <b>right</b> is the <b>same or a mirror image</b> of the shape on the <b>left</b>.</p> ",
           "<p>If the shapes are the <b>same</b>, press the <b>'Y'</b> key. If they are <b>mirror images</b>, press the <b>'N'</b> key.</p> "],
         };
-          timeline.push(box_trial_same_or_mirror_1);
+          //timeline.push(box_trial_same_or_mirror_1);
 
           var  box_trial_same_or_mirror_2= {
                 type: 'boxes',
@@ -129,7 +129,7 @@
                 rotation_target: 0,
                 correct_match: 'y',
       };
-      timeline.push(box_trial_same_or_mirror_2);
+      //timeline.push(box_trial_same_or_mirror_2);
 
       var box_trial_rotate_1 = {
           type: 'boxes',
@@ -151,7 +151,7 @@
           dialog: ["<p> The shape on the right will now be shown at different angles to challenge you. "+
           "Is the shape on the right the same as the shape on the left?</p> "],
       };
-      timeline.push(box_trial_rotate_1);
+      //timeline.push(box_trial_rotate_1);
 
       var box_trial_rotate_2 = {
           type: 'boxes',
@@ -173,7 +173,7 @@
           dialog: ["<p> Is the shape on the right the same as the shape on the left? </p>"],
 
       };
-      timeline.push(box_trial_rotate_2);
+      //timeline.push(box_trial_rotate_2);
 
       var box_trial_tutorial_1 = {
           type: 'boxes',
@@ -195,7 +195,7 @@
           dialog: ["<p>Now try some on your own!</p>"],
 
       };
-      timeline.push(box_trial_tutorial_1);
+      //timeline.push(box_trial_tutorial_1);
 
       var box_trial_tutorial_2 = {
           type: 'boxes',
@@ -215,7 +215,7 @@
           rotation_target: 60,
           correct_match: 'y',
       };
-      timeline.push(box_trial_tutorial_2);
+      //timeline.push(box_trial_tutorial_2);
 
       var box_trial_tutorial_3 = {
           type: 'boxes',
@@ -235,7 +235,7 @@
           rotation_target: 30,
           correct_match: 'n',
       };
-      timeline.push(box_trial_tutorial_3);
+      //timeline.push(box_trial_tutorial_3);
 
       var congrats ={
         type: "html-button-response",
@@ -246,7 +246,7 @@
           document.querySelector('#progress').style.visibility= "visible"
       },
     };
-      timeline.push(congrats);
+      //timeline.push(congrats);
 
       var number_of_rounds = 3;
 
