@@ -35,6 +35,10 @@ jsPsych.plugins['boxes'] = (function(){
         css_content+= "@keyframes intro {0% {top:0px; transform: translateY(-1000px); }100% {top:0px;  transform:translateY(0px); }}"
         css_content+= ".start_intro_animation {animation: intro .5s;}"
         css_content+= ".around_boxes { position: relative; width:800px; height:350px; top: calc(50% - 175px); left: calc(50% - 400px); } "
+        css_content+= ".keybox { position: absolute; top: 500px;  width: 60px; height: 60px;  margin: 0; text-align:center; }"
+        css_content+= ".keybox p { font-family: 'Overpass'; font-weight: bold; line-height: 70px; margin: 0; padding: 0; font-size: 45px; color:white; }"
+        css_content+= "#Y { left: calc(50% - 70px); background-color: orange; }"
+        css_content+= "#N { left: calc(50% + 10px); background-color: blue; }"
         css_content+= "#inside_box_1 { position:absolute; width:350px; height:350px; left: 0px;  }"
         css_content+= "#inside_box_2 { position:absolute; width:350px; height:350px; right: 0px; } "
         css_content+= ".square:after { content: ''; position:absolute; height:"+Math.round(trial.square_size/3)+"px; width:"+(trial.square_size - trial.square_size*0.1)+"px; top:100%; background-color: blue; left:0px; transform: skewX(45deg); transform-origin: 0 0;}"
@@ -67,6 +71,7 @@ jsPsych.plugins['boxes'] = (function(){
         html_content+= "<div id='inside_box_1'> </div>"
         html_content+= "<div id='inside_box_2'> </div>"
         html_content += "</div>"
+        html_content += "<div class='keybox' id='Y'><p>Y</p></div><div class='keybox' id='N'><p>N</p></div>"
         html_content += "</div>"
         if(trial.dialog!==null){
           html_content+= "<div class= 'dialog'><div id='dialog_text'> "+trial.dialog[0]+"</div>"
