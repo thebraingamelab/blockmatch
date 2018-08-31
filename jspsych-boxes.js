@@ -37,8 +37,8 @@ jsPsych.plugins['boxes'] = (function(){
         css_content+= ".around_boxes { position: relative; width:800px; height:350px; top: calc(50% - 175px); left: calc(50% - 400px); } "
         css_content+= "#inside_box_1 { position:absolute; width:350px; height:350px; left: 0px;  }"
         css_content+= "#inside_box_2 { position:absolute; width:350px; height:350px; right: 0px; } "
-        css_content+= ".square:after { content: ''; position:absolute; height:"+Math.round(trial.square_size/3)+"px; width:"+(trial.square_size - trial.square_size*0.1)+"px; top:100%; background-color: orange; left:0px; transform: skewX(45deg); transform-origin: 0 0;}"
-        css_content+= ".square:before { content: ''; position:absolute; height:"+(trial.square_size - trial.square_size*0.1)+"px; width:"+Math.round(trial.square_size/3)+"px; left:100%; background-color: blue; transform: skewY(45deg); transform-origin: 0 0;}"
+        css_content+= ".square:after { content: ''; position:absolute; height:"+Math.round(trial.square_size/3)+"px; width:"+(trial.square_size - trial.square_size*0.1)+"px; top:100%; background-color: blue; left:0px; transform: skewX(45deg); transform-origin: 0 0;}"
+        css_content+= ".square:before { content: ''; position:absolute; height:"+(trial.square_size - trial.square_size*0.1)+"px; width:"+Math.round(trial.square_size/3)+"px; left:100%; background-color: orange; transform: skewY(45deg); transform-origin: 0 0;}"
         if(trial.rotation_target < 90){
           for(var i=0; i<trial.grid_rows; i++){
             css_content += "#inside_box_2 .row-"+i+" { z-index: "+i+" }"
