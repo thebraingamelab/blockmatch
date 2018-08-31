@@ -37,7 +37,29 @@ jsPsych.plugins['boxes'] = (function(){
         css_content+= ".around_boxes { position: relative; width:800px; height:350px; top: calc(50% - 175px); left: calc(50% - 400px); } "
         css_content+= "#inside_box_1 { position:absolute; width:350px; height:350px; left: 0px;  }"
         css_content+= "#inside_box_2 { position:absolute; width:350px; height:350px; right: 0px; } "
-        css_content+= ".dialog { position: absolute; width: 400px; height: 300px; border: 1px solid black; background-color: darkcyan; top: calc(50% - 150px); left: calc(50% - 200px)};"
+        css_content+= ".square:after { content: ''; position:absolute; height:"+Math.round(trial.square_size/3)+"px; width:"+(trial.square_size - trial.square_size*0.1)+"px; top:100%; background-color: orange; left:0px; transform: skewX(45deg); transform-origin: 0 0;}"
+        css_content+= ".square:before { content: ''; position:absolute; height:"+(trial.square_size - trial.square_size*0.1)+"px; width:"+Math.round(trial.square_size/3)+"px; left:100%; background-color: blue; transform: skewY(45deg); transform-origin: 0 0;}"
+        if(trial.rotation_target < 90){
+          for(var i=0; i<trial.grid_rows; i++){
+            css_content += "#inside_box_2 .row-"+i+" { z-index: "+i+" }"
+          }
+        } else if(trial.rotation_target >= 90 && trial.rotation_target < 180){
+          css_content+= "#inside_box_2 .square { transform: rotate(-90deg); }"
+          var z = 1;
+          for(var i=trial.grid_rows-1; i>=0; i--){
+            css_content += "#inside_box_2 .row-"+i+" { z-index: "+z+" }"
+            z++;
+          }
+        } else if( trial.rotation_target >= 180){
+          css_content+= "#inside_box_2 .square { transform: rotate(-180deg); }"
+          var z = 1;
+          for(var i=trial.grid_rows-1; i>=0; i--){
+            for(var j=trial.grid_cols-1; j>=0; j--){
+              css_content += "#inside_box_2 .row-"+i+".col-"+j+" { z-index: "+z+" }"
+              z++;
+            }
+          }
+        }
         css_content+= "</style>"
 
     var html_content = "<div class='boxes-big-container'>"
@@ -60,8 +82,8 @@ jsPsych.plugins['boxes'] = (function(){
     var rotation_target= trial.rotation_target;
     var filled_in_reference= trial.filled_in_reference;
     var filled_in_target = trial.reflected? plugin.reflectShape(trial.filled_in_reference): trial.filled_in_reference;
-    var html= createSquares(grid_cols, grid_rows, square_size, rotation_reference, filled_in_reference, 4);
-    var html_2= createSquares(grid_cols, grid_rows, square_size, rotation_target, filled_in_target, 4);
+    var html= createSquares(grid_cols, grid_rows, square_size, rotation_reference, filled_in_reference, trial.square_size*0.1);
+    var html_2= createSquares(grid_cols, grid_rows, square_size, rotation_target, filled_in_target, trial.square_size*0.1);
 
     document.querySelector('#inside_box_1').innerHTML= html;
     document.querySelector('#inside_box_2').innerHTML= html_2;
@@ -165,10 +187,9 @@ jsPsych.plugins['boxes'] = (function(){
 
     var html= "<div style='width:"+grid_width+"px; height:"+grid_height+"px; left:calc(50% - "+(grid_width/2)+"px); top:calc(50% - "+(grid_height/2)+"px);  position:relative; transform:rotate("+rotation+"deg);'>"
     for(row=0; row < grid_rows; row++){
-     console.log('new row!')
       for(col=0; col < grid_cols; col++){
         if(filled_in[row][col] == true){
-          html+= "<div style='position:absolute; left:"+(col*square_size)+"px; top:"+(row*square_size)+"px; width:"+(square_size-padding)+"px; height:"+(square_size-padding)+"px; background-color: white;'></div>"
+          html+= "<div class='square row-"+row+" col-"+col+"' style='position:absolute; left:"+(col*square_size)+"px; top:"+(row*square_size)+"px; width:"+(square_size-padding)+"px; height:"+(square_size-padding)+"px; background-color: white;'></div>"
         }
       }
     }
