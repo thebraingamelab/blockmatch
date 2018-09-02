@@ -51,13 +51,30 @@
           margin: 10px;
         }
         #overlay {
-          background-color: white;
-          width: 960px;
+          width: 300px;
           height: 150px;
+          padding: 10px;
+          background-color: rgba(255,255,255,0.2);
           position: absolute;
           z-index: 2;
-          top: calc(50% - 300px);
-          left: calc(50% - 480px);
+          top: calc(50% - 280px);
+          left: calc(50% - 460px);
+          font-size: 22px;
+          font-family: 'Overpass';
+          color: white;
+          line-height: 30px;
+        }
+        #timer_box {
+          
+        }
+        #timer {
+          text-align: right;
+          display: inline-block;
+          color: orange;
+          font-size: 36px;
+        }
+        #score_box {
+          
         }
 
         </style>
@@ -65,8 +82,8 @@
       <body>
         <div id="experiment"></div>
         <div id="overlay">
-          <div id="timer">60.0</div>
-          <div id="score"></div>
+          <div id="timer_box"><span>TIME</span><span id="timer">60.0</span></div>
+          <div id="score_box"><span>SCORE</span><span id="score">0</span></div>
           <div id="progress"></div>
         </div>
       </div>
@@ -75,7 +92,7 @@
 
       // game parameters
       var correct_responses_per_round = 5;
-      var seconds_per_round = 60;
+      var seconds_per_round = 2;
       var num_rounds = 8;
 
       var timeline = [];
@@ -140,7 +157,7 @@
             }
             document.querySelector('#timer').innerHTML = remaining_time.toFixed(2);
             if(remaining_time == 0){
-              //jsPsych.finishTrial({}); //TODO: fix this data...
+              jsPsych.finishTrial({timeout: true}); //TODO: fix this data...
             } else {
               window.requestAnimationFrame(next);
             }
@@ -174,6 +191,9 @@
         },
 
         loop_function: function(data){
+          if(data.values()[0].timeout){
+            return false;
+          }
 
           if (data.values()[0].correct){
             correct_responses_in_round++
@@ -185,14 +205,14 @@
                 matches[i].style="background-color: purple"
               }
             }*/
-            return true;
+           
           } else {
             rounds_completed++;
             shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
             correct_responses_in_round = 0
             both_new = true
-            return true;
           }
+          return true;
         }
       }
 
