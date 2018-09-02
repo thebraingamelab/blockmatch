@@ -131,8 +131,6 @@ jsPsych.plugins['boxes'] = (function(){
         if (e.keyCode==78){
           document.querySelector('#inside_box_2').addEventListener("animationend", function(){
             display_element.innerHTML = "";
-            if(correct_response <= 5){
-            }
             end();
           })
           document.querySelector('#inside_box_2').className = "start_animation";

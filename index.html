@@ -6,6 +6,7 @@
         <title>My Experiment</title>
         <script src="jspsych-6.0.4/jspsych.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-html-keyboard-response.js"></script>
+        <script src="jspsych-6.0.4/plugins/jspsych-call-function.js"></script>
         <script src="jspsych-boxes.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-image-keyboard-response.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-html-button-response.js"></script>
@@ -49,19 +50,33 @@
           display: inline-block;
           margin: 10px;
         }
+        #overlay {
+          background-color: white;
+          width: 960px;
+          height: 150px;
+          position: absolute;
+          z-index: 2;
+          top: calc(50% - 300px);
+          left: calc(50% - 480px);
+        }
 
         </style>
       </head>
       <body>
         <div id="experiment"></div>
-        <div id="progress" class="text">
-          <b>Progress Bar: </b>
-        <span id= "round" class= "text">  </span>
-        <span id= "total" class= "text">  </span>
-        <div id= "circle_container"></div>
+        <div id="overlay">
+          <div id="timer">60.0</div>
+          <div id="score"></div>
+          <div id="progress"></div>
+        </div>
       </div>
       </body>
       <script>
+
+      // game parameters
+      var correct_responses_per_round = 5;
+      var seconds_per_round = 60;
+      var num_rounds = 8;
 
       var timeline = [];
 
@@ -89,179 +104,6 @@
       };
       //timeline.push(welcome);
 
-
-    var  box_trial_same_or_mirror_1 = {
-          type: 'boxes',
-          grid_rows: 4,
-          grid_cols: 4,
-          filled_in_reference: [
-          [false, false, true, true],
-          [false, false, true, false],
-          [false, true, false, false],
-          [false, true, false, false]
-          ],
-          both_new: true,
-          clearboth: false,
-          square_size: 50,
-          rotation_reference: 0,
-          reflected: true,
-          rotation_target: 0,
-          correct_match: 'n',
-          dialog: ["<p><b>Welcome!</b></p> <p>For this experiment, you will only be using the <b>'N'</b> and <b>'Y'</b> keys. </p>",
-          "<p>For this game, your task will be to determine whether the shape on the <b>right</b> is the <b>same or a mirror image</b> of the shape on the <b>left</b>.</p> ",
-          "<p>If the shapes are the <b>same</b>, press the <b>'Y'</b> key. If they are <b>mirror images</b>, press the <b>'N'</b> key.</p> "],
-        };
-          //timeline.push(box_trial_same_or_mirror_1);
-
-          var  box_trial_same_or_mirror_2= {
-                type: 'boxes',
-                grid_rows: 4,
-                grid_cols: 4,
-                filled_in_reference: [
-                [false, false, true, true],
-                [false, false, true, false],
-                [false, true, false, false],
-                [false, true, false, false]
-                ],
-                both_new: true,
-                clearboth: false,
-                square_size: 50,
-                rotation_reference: 0,
-                reflected: false,
-                rotation_target: 0,
-                correct_match: 'y',
-      };
-      //timeline.push(box_trial_same_or_mirror_2);
-
-      var box_trial_rotate_1 = {
-          type: 'boxes',
-          grid_rows: 4,
-          grid_cols: 4,
-          filled_in_reference: [
-          [false, false, true, true],
-          [false, false, false, true],
-          [false, false, true, false],
-          [true, true, false, false]
-          ],
-          both_new: true,
-          clearboth: false,
-          square_size: 50,
-          rotation_reference: 0,
-          reflected: true,
-          rotation_target: 90,
-          correct_match: 'n',
-          dialog: ["<p> The shape on the right will now be shown at different angles to challenge you. "+
-          "Is the shape on the right the same as the shape on the left?</p> "],
-      };
-      //timeline.push(box_trial_rotate_1);
-
-      var box_trial_rotate_2 = {
-          type: 'boxes',
-          grid_rows: 4,
-          grid_cols: 4,
-          filled_in_reference: [
-          [false, false, true, true],
-          [false, false, false, true],
-          [false, false, true, false],
-          [true, true, false, false]
-          ],
-          both_new: true,
-          clearboth: false,
-          square_size: 50,
-          rotation_reference: 0,
-          reflected: false,
-          rotation_target: 180,
-          correct_match: 'y',
-          dialog: ["<p> Is the shape on the right the same as the shape on the left? </p>"],
-
-      };
-      //timeline.push(box_trial_rotate_2);
-
-      var box_trial_tutorial_1 = {
-          type: 'boxes',
-          grid_rows: 4,
-          grid_cols: 4,
-          filled_in_reference: [
-          [false, false, false, true],
-          [false, false, false, true],
-          [false, true, true, true],
-          [true, true, false, false]
-          ],
-          both_new: true,
-          clearboth: false,
-          square_size: 50,
-          rotation_reference: 0,
-          reflected: false,
-          rotation_target: 180,
-          correct_match: 'y',
-          dialog: ["<p>Now try some on your own!</p>"],
-
-      };
-      //timeline.push(box_trial_tutorial_1);
-
-      var box_trial_tutorial_2 = {
-          type: 'boxes',
-          grid_rows: 4,
-          grid_cols: 4,
-          filled_in_reference: [
-          [false, false, true, true],
-          [false, false, false, true],
-          [false, true, true, false],
-          [false, true, false, false]
-          ],
-          both_new: true,
-          clearboth: false,
-          square_size: 50,
-          rotation_reference: 0,
-          reflected: false,
-          rotation_target: 60,
-          correct_match: 'y',
-      };
-      //timeline.push(box_trial_tutorial_2);
-
-      var box_trial_tutorial_3 = {
-          type: 'boxes',
-          grid_rows: 4,
-          grid_cols: 4,
-          filled_in_reference: [
-          [false, false, true, true],
-          [false, false, false, true],
-          [false, true, true, false],
-          [false, true, false, false]
-          ],
-          both_new: true,
-          clearboth: false,
-          square_size: 50,
-          rotation_reference: 0,
-          reflected: true,
-          rotation_target: 30,
-          correct_match: 'n',
-      };
-      //timeline.push(box_trial_tutorial_3);
-
-      var congrats ={
-        type: "html-button-response",
-        stimulus: "Congratulations! You are now ready to continue onto the experiment!",
-        choices: ["Continue"],
-        button_html: '<button class="jspsych-btn">%choice%</button>',
-        on_finish: function(){
-          document.querySelector('#progress').style.visibility= "visible"
-      },
-    };
-      //timeline.push(congrats);
-
-      var number_of_rounds = 3;
-
-      var correct_responses_per_round = 3;
-
-      var circle_html= ""
-
-      for(i=0; i < correct_responses_per_round; i++){
-        circle_html+= "<span class= 'circle'></span>"
-
-      }
-      document.querySelector('#circle_container').innerHTML= circle_html;
-
       var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
 
       var trials = [
@@ -279,14 +121,43 @@
         {reflected:false, orientation: 180, correct_key: 'y'},
       ]
 
-      var both_new = true
-      var box_trial_1 = {
+      // create variable for number of correct responses
+      var both_new = true;
+      var correct_responses_in_round = 0;
+      var rounds_completed= 0;
+      var remaining_time = null;
+
+      var start_time = null;
+
+      var start_round = {
+        type: 'call-function',
+        func: function(){
+          start_time = performance.now();
+          function next(time){
+            remaining_time = seconds_per_round - (time - start_time)/1000;
+            if(remaining_time < 0){
+              remaining_time = 0;
+            }
+            document.querySelector('#timer').innerHTML = remaining_time.toFixed(2);
+            if(remaining_time == 0){
+              //jsPsych.finishTrial({}); //TODO: fix this data...
+            } else {
+              window.requestAnimationFrame(next);
+            }
+          }
+          window.requestAnimationFrame(next);
+        }
+      }
+      timeline.push(start_round);
+
+      var box_trials = {
+        timeline: [{
           type: 'boxes',
           grid_rows: 4,
           grid_cols: 4,
           filled_in_reference: function() {return shape},
           both_new: function() {return both_new},
-          clearboth: function () {return correct_response==correct_responses_per_round - 1},
+          clearboth: function () {return correct_responses_in_round == correct_responses_per_round - 1},
           square_size: 70,
           rotation_reference: 0,
           reflected:jsPsych.timelineVariable("reflected"),
@@ -295,18 +166,7 @@
           on_finish: function(){
             both_new = false
           }
-
-      };
-      // create variable for number of correct responses
-      correct_response = 0
-
-      rounds_completed= 0
-
-      document.querySelector('#round').innerHTML = "Round "+(rounds_completed+1)+" "
-      document.querySelector('#total').innerHTML = "of "+number_of_rounds+" "
-
-      var box_trials = {
-        timeline: [box_trial_1],
+        }],
         timeline_variables: trials,
         sample: {
           type: 'without-replacement',
@@ -316,41 +176,30 @@
         loop_function: function(data){
 
           if (data.values()[0].correct){
-            correct_response++
+            correct_responses_in_round++
           }
-          console.log(data.values()[0].correct);
-          if (correct_response < correct_responses_per_round) {
-          var matches=  document.querySelectorAll('.circle')
-              for(i=0; i < matches.length; i++){
-                if(i < correct_response){
-                  matches[i].style="background-color: purple"
-                }
+          if (correct_responses_in_round < correct_responses_per_round) {
+            /*var matches = document.querySelectorAll('.circle');
+            for(i=0; i < matches.length; i++){
+              if(i < correct_response){
+                matches[i].style="background-color: purple"
               }
-            return true
+            }*/
+            return true;
           } else {
-            rounds_completed++
-            if(rounds_completed < number_of_rounds){
-              document.querySelector('#round').innerHTML = "Round "+(rounds_completed+1)+" "
-              document.querySelector('#total').innerHTML = "of "+number_of_rounds+" "
-              shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
-              correct_response = 0
-              both_new = true
-              var matches=  document.querySelectorAll('.circle')
-                  for(i=0; i < matches.length; i++){
-                    // if(i > correct_response){
-                      matches[i].style="background-color: #cccccc"
-                  }
-              return true
-            } else {
-              document.querySelector('#progress').remove()
-              return false
-            }
-            }
+            rounds_completed++;
+            shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
+            correct_responses_in_round = 0
+            both_new = true
+            return true;
+          }
         }
       }
 
       timeline.push(box_trials);
 
+      
+/*
      var survey1 ={
          type: 'survey-text',
          questions:[{prompt:"<p>What is your age?</p>"},
@@ -393,7 +242,7 @@
      choices: jsPsych.NO_KEYS
    };
    timeline.push(payment);
-
+*/
       jsPsych.init({
         timeline: timeline,
         display_element: 'experiment'
