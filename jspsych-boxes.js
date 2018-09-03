@@ -28,8 +28,8 @@ jsPsych.plugins['boxes'] = (function(){
 
     var css_content = "<style>"
         css_content+= "html, body { background-color: black; }";
-        css_content+= ".boxes-big-container { height: 600px; width: 960px; position: relative; overflow: hidden; background-color: black; border-top: blue 6px solid; border-left: blue 6px solid; border-right: 6px solid orange; border-bottom: 6px solid orange; }"
-        css_content+= ".boxes-big-container:before { content: ''; position: absolute; pointer-events: none; z-index: 1; top: 0; left: 0; right: 0; bottom: 0; border-top: orange 6px solid; border-left: orange 6px solid; border-right: 6px solid blue; border-bottom: 6px solid blue; }"
+        css_content+= ".boxes-big-container { height: 600px; width: 960px; position: relative; overflow: hidden; background-color: black; border-top: #012BFF 6px solid; border-left: #012BFF 6px solid; border-right: 6px solid #F49661; border-bottom: 6px solid #F49661; }"
+        css_content+= ".boxes-big-container:before { content: ''; position: absolute; pointer-events: none; z-index: 1; top: 0; left: 0; right: 0; bottom: 0; border-top: #F49661 6px solid; border-left: #F49661 6px solid; border-right: 6px solid #012BFF; border-bottom: 6px solid #012BFF; }"
         css_content+= "@keyframes change_color {0% { transform: translateY(0px); } 100% {transform: translateY(500px); }} "
         css_content+= ".start_animation {animation: change_color .5s;}"
         css_content+= "@keyframes intro {0% {transform: translateY(-1000px); } 100% { transform:translateY(0px); }}"
@@ -37,12 +37,12 @@ jsPsych.plugins['boxes'] = (function(){
         css_content+= ".around_boxes { position: relative; width:800px; height:350px; top: calc(50% - 175px); left: calc(50% - 400px); } "
         css_content+= ".keybox { position: absolute; top: 500px;  width: 60px; height: 60px;  margin: 0; text-align:center; }"
         css_content+= ".keybox p { font-family: 'Overpass'; font-weight: bold; line-height: 70px; margin: 0; padding: 0; font-size: 45px; color:white; }"
-        css_content+= "#Y { left: calc(50% - 70px); background-color: orange; }"
-        css_content+= "#N { left: calc(50% + 10px); background-color: blue; }"
+        css_content+= "#Y { left: calc(50% - 70px); background-color: #F49661; }"
+        css_content+= "#N { left: calc(50% + 10px); background-color: #012BFF; }"
         css_content+= "#inside_box_1 { position:absolute; width:350px; height:350px; left: 0px;  }"
         css_content+= "#inside_box_2 { position:absolute; width:350px; height:350px; right: 0px; } "
-        css_content+= ".square:after { content: ''; position:absolute; height:"+Math.round(trial.square_size/3)+"px; width:"+(trial.square_size - trial.square_size*0.1)+"px; top:100%; background-color: blue; left:0px; transform: skewX(45deg); transform-origin: 0 0;}"
-        css_content+= ".square:before { content: ''; position:absolute; height:"+(trial.square_size - trial.square_size*0.1)+"px; width:"+Math.round(trial.square_size/3)+"px; left:100%; background-color: orange; transform: skewY(45deg); transform-origin: 0 0;}"
+        css_content+= ".square:after { content: ''; position:absolute; height:"+Math.round(trial.square_size/3)+"px; width:"+(trial.square_size - trial.square_size*0.1)+"px; top:100%; background-color: #012BFF; left:0px; transform: skewX(45deg); transform-origin: 0 0;}"
+        css_content+= ".square:before { content: ''; position:absolute; height:"+(trial.square_size - trial.square_size*0.1)+"px; width:"+Math.round(trial.square_size/3)+"px; left:100%; background-color: #F49661; transform: skewY(45deg); transform-origin: 0 0;}"
         if(trial.rotation_target < 90){
           for(var i=0; i<trial.grid_rows; i++){
             css_content += "#inside_box_2 .row-"+i+" { z-index: "+i+" }"

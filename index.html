@@ -15,6 +15,7 @@
         <script src="jspsych-6.0.4/plugins/jspsych-survey-multi-select.js"></script>
         <link href="jspsych-6.0.4/css/jspsych.css" rel="stylesheet" type="text/css"></link>
         <link href="https://fonts.googleapis.com/css?family=Overpass" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Overpass+Mono" rel="stylesheet">
         <style>
         html, body, #experiment {
           margin: 0;
@@ -51,30 +52,50 @@
           margin: 10px;
         }
         #overlay {
-          width: 300px;
-          height: 150px;
+          width: 150px;
+          /*height: 80px;*/
           padding: 10px;
           background-color: rgba(255,255,255,0.2);
           position: absolute;
           z-index: 2;
           top: calc(50% - 280px);
           left: calc(50% - 460px);
-          font-size: 22px;
+          font-size: 18px;
           font-family: 'Overpass';
           color: white;
           line-height: 30px;
         }
         #timer_box {
-          
+          border-bottom: 1px solid white;
+          padding: 0px 0px 10px 0px;
+          width: 100%;
+        }
+        #timer-label {
+          display: inline-block;
+          width: 40%;
         }
         #timer {
           text-align: right;
           display: inline-block;
+          width:60%;
           color: orange;
-          font-size: 36px;
+          font-size: 26px;
+          font-family: 'Overpass Mono';
         }
         #score_box {
-          
+          padding: 10px 0px 0px 0px;
+        }
+        #score-label {
+          display: inline-block;
+          width: 60%;
+        }
+        #score {
+          color: green;
+          font-size: 26px;
+          display: inline-block;
+          text-align: right;
+          width: 40%;
+          font-family: 'Overpass Mono';
         }
 
         </style>
@@ -82,8 +103,8 @@
       <body>
         <div id="experiment"></div>
         <div id="overlay">
-          <div id="timer_box"><span>TIME</span><span id="timer">60.0</span></div>
-          <div id="score_box"><span>SCORE</span><span id="score">0</span></div>
+          <div id="timer_box"><span id="timer-label">TIME</span><span id="timer">60.0</span></div>
+          <div id="score_box"><span id="score-label">SCORE</span><span id="score">0</span></div>
           <div id="progress"></div>
         </div>
       </div>
@@ -94,6 +115,8 @@
       var correct_responses_per_round = 5;
       var seconds_per_round = 2;
       var num_rounds = 8;
+      var points_per_correct = 10;
+      var points_per_perfect_round = 100;
 
       var timeline = [];
 
@@ -142,6 +165,7 @@
       var both_new = true;
       var correct_responses_in_round = 0;
       var rounds_completed= 0;
+      var score = 0;
       var remaining_time = null;
 
       var start_time = null;
@@ -149,6 +173,9 @@
       var start_round = {
         type: 'call-function',
         func: function(){
+          // reset
+          document.querySelector('#timer').innerHTML = seconds_per_round.toFixed(2);
+          document.querySelector('#score').innerHTML = score;
           start_time = performance.now();
           function next(time){
             remaining_time = seconds_per_round - (time - start_time)/1000;
@@ -156,6 +183,7 @@
               remaining_time = 0;
             }
             document.querySelector('#timer').innerHTML = remaining_time.toFixed(2);
+            document.querySelector('#score').innerHTML = score;
             if(remaining_time == 0){
               jsPsych.finishTrial({timeout: true}); //TODO: fix this data...
             } else {
@@ -197,6 +225,7 @@
 
           if (data.values()[0].correct){
             correct_responses_in_round++
+            score += points_per_correct;
           }
           if (correct_responses_in_round < correct_responses_per_round) {
             /*var matches = document.querySelectorAll('.circle');
@@ -207,10 +236,12 @@
             }*/
            
           } else {
+            // check for perfect round
+            score += points_per_perfect_round;
             rounds_completed++;
             shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
-            correct_responses_in_round = 0
-            both_new = true
+            correct_responses_in_round = 0;
+            both_new = true;
           }
           return true;
         }
