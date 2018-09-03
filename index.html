@@ -102,7 +102,7 @@
       </head>
       <body>
         <div id="experiment"></div>
-        <div id="overlay">
+        <div id="overlay" style="visibility:hidden;">
           <div id="timer_box"><span id="timer-label">TIME</span><span id="timer">60.0</span></div>
           <div id="score_box"><span id="score-label">SCORE</span><span id="score">0</span></div>
           <div id="progress"></div>
@@ -117,6 +117,21 @@
       var num_rounds = 8;
       var points_per_correct = 10;
       var points_per_perfect_round = 100;
+
+      var trials = [
+        {reflected:true, orientation: 30, correct_key: 'n'},
+        {reflected:true, orientation: 60, correct_key: 'n'},
+        {reflected:true, orientation: 90, correct_key: 'n'},
+        {reflected:true, orientation: 120, correct_key: 'n'},
+        {reflected:true, orientation: 150, correct_key: 'n'},
+        {reflected:true, orientation: 180, correct_key: 'n'},
+        {reflected:false, orientation: 30, correct_key: 'y'},
+        {reflected:false, orientation: 60, correct_key: 'y'},
+        {reflected:false, orientation: 90, correct_key: 'y'},
+        {reflected:false, orientation: 120, correct_key: 'y'},
+        {reflected:false, orientation: 150, correct_key: 'y'},
+        {reflected:false, orientation: 180, correct_key: 'y'},
+      ]
 
       var timeline = [];
 
@@ -144,22 +159,27 @@
       };
       //timeline.push(welcome);
 
-      var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
+      var switch_to_game_style = {
+        type: 'call-function',
+        func: function(){
+          var new_css = '<style id="game_css">'
+          new_css += 'html, body { background-color: black; }'
+          new_css += "#jspsych-content { height: 600px; width: 960px; position: relative; overflow: hidden; background-color: black; border-top: #012BFF 6px solid; border-left: #012BFF 6px solid; border-right: 6px solid #F49661; border-bottom: 6px solid #F49661; }"
+          new_css += "#jspsych-content:before { content: ''; position: absolute; pointer-events: none; z-index: 1; top: 0; left: 0; right: 0; bottom: 0; border-top: #F49661 6px solid; border-left: #F49661 6px solid; border-right: 6px solid #012BFF; border-bottom: 6px solid #012BFF; }"
+          document.querySelector('head').insertAdjacentHTML('beforeend', new_css);
+        }
+      }
+      timeline.push(switch_to_game_style);
 
-      var trials = [
-        {reflected:true, orientation: 30, correct_key: 'n'},
-        {reflected:true, orientation: 60, correct_key: 'n'},
-        {reflected:true, orientation: 90, correct_key: 'n'},
-        {reflected:true, orientation: 120, correct_key: 'n'},
-        {reflected:true, orientation: 150, correct_key: 'n'},
-        {reflected:true, orientation: 180, correct_key: 'n'},
-        {reflected:false, orientation: 30, correct_key: 'y'},
-        {reflected:false, orientation: 60, correct_key: 'y'},
-        {reflected:false, orientation: 90, correct_key: 'y'},
-        {reflected:false, orientation: 120, correct_key: 'y'},
-        {reflected:false, orientation: 150, correct_key: 'y'},
-        {reflected:false, orientation: 180, correct_key: 'y'},
-      ]
+      var title_screen = {
+        type: 'html-button-response',
+        stimulus: '<div id="title_screen" style="width:960px; height: 600px; position: relative;">'+
+          '<div id="title" style="text-align: left; position: absolute; top: 50px; left: 50px;"><img src="img/blockmatch_title.jpg" style="width:650px;"></div>'+
+          '<div id="title_right" style="position: absolute; top: 50px; right: 50px;"><img src="img/titlescreen_right.jpg" style="height: 500px"></img></div></div>',
+        choices: ['PLAY'],
+        button_html: '<button class="title-btn">%choice%</button>'
+      }
+      timeline.push(title_screen);      
 
       // create variable for number of correct responses
       var both_new = true;
@@ -167,6 +187,7 @@
       var rounds_completed= 0;
       var score = 0;
       var remaining_time = null;
+      var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
 
       var start_time = null;
 
@@ -177,6 +198,8 @@
           document.querySelector('#timer').innerHTML = seconds_per_round.toFixed(2);
           document.querySelector('#score').innerHTML = score;
           start_time = performance.now();
+          // show overlay
+          document.querySelector('#overlay').style.visibility = 'visible';
           function next(time){
             remaining_time = seconds_per_round - (time - start_time)/1000;
             if(remaining_time < 0){
