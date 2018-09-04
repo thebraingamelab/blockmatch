@@ -31,9 +31,9 @@ jsPsych.plugins['boxes'] = (function(){
         css_content+= ".boxes-big-container { height: 600px; width: 960px; }"
         //css_content+= ".boxes-big-container:before { content: ''; position: absolute; pointer-events: none; z-index: 1; top: 0; left: 0; right: 0; bottom: 0; border-top: #F49661 6px solid; border-left: #F49661 6px solid; border-right: 6px solid #012BFF; border-bottom: 6px solid #012BFF; }"
         css_content+= "@keyframes change_color {0% { transform: translateY(0px); } 100% {transform: translateY(500px); }} "
-        css_content+= ".start_animation {animation: change_color .5s;}"
+        css_content+= ".start_animation {animation: change_color .35s;}"
         css_content+= "@keyframes intro {0% {transform: translateY(-1000px); } 100% { transform:translateY(0px); }}"
-        css_content+= ".start_intro_animation {animation: intro .5s;}"
+        css_content+= ".start_intro_animation {animation: intro .35s;}"
         css_content+= ".around_boxes { position: relative; width:800px; height:350px; top: calc(50% - 175px); left: calc(50% - 400px); } "
         //css_content+= ".keybox { position: absolute; top: 500px;  width: 60px; height: 60px;  margin: 0; text-align:center; }"
         //css_content+= ".keybox p { font-family: 'Overpass'; font-weight: bold; line-height: 70px; margin: 0; padding: 0; font-size: 45px; color:white; }"
@@ -108,6 +108,9 @@ jsPsych.plugins['boxes'] = (function(){
 
     var correct = null;
     var rt = null;
+
+    // make sure focus is on screen
+    document.querySelector('body').focus();
 
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: after_response,

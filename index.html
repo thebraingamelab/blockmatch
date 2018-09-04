@@ -311,7 +311,7 @@
       <script>
 
       // game parameters
-      var seconds_per_round = 10;
+      var seconds_per_round = 60;
       var num_rounds = 8;
       var correct_responses_per_shape = 5;
       var points_per_correct = 10;
@@ -567,14 +567,19 @@
           var this_round_data = jsPsych.data.get().filter({round: round});
           var total = this_round_data.filterCustom(function(x) { return typeof x.timeout == 'undefined'; }).count();
           var n_correct = this_round_data.filter({correct: true}).count();
-          var rt = this_round_data.filter({correct: true}).select('rt').mean();
+          if(n_correct > 0){
+            var rt = Math.round(this_round_data.filter({correct: true}).select('rt').mean()) + "ms";
+          } else {
+            var rt = "NA";
+          }
+          
 
           var html = '<div id="scoreboard" style="width:960px; height: 600px; position: relative;">';
           html += '<div id="score-text">';
           html += '<h1>Round '+round+' of '+num_rounds+'</h1>';
           html += '<p class="big-score">You scored '+score+' points.</p>';
           html += '<p><span class="left-score">Correct responses</span><span class="right-score">'+n_correct+' of '+total+'</span></p>';
-          html += '<p><span class="left-score">Average response time</span><span class="right-score">'+Math.round(rt)+'ms</span></p>';
+          html += '<p><span class="left-score">Average response time</span><span class="right-score">'+rt+'</span></p>';
           html += '<p><span class="left-score">Best score so far</span><span class="right-score">'+best_score+'</span></p>';
           html += '</div>';
           html += '</div>';
