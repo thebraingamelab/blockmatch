@@ -456,17 +456,11 @@
             correct_responses_in_round++
             score += points_per_correct;
           }
-          if (correct_responses_in_round < correct_responses_per_round) {
-            /*var matches = document.querySelectorAll('.circle');
-            for(i=0; i < matches.length; i++){
-              if(i < correct_response){
-                matches[i].style="background-color: purple"
-              }
-            }*/
-           
-          } else {
+          if (correct_responses_in_round == correct_responses_per_round) {
             // check for perfect round
-            score += points_per_perfect_round;
+            if(n_in_this_shape == correct_responses_per_round){
+              score += points_per_perfect_round;
+            }
             rounds_completed++;
             n_in_this_shape = 0;
             shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
