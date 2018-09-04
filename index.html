@@ -14,9 +14,10 @@
         <script src="jspsych-6.0.4/plugins/jspsych-survey-text.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-survey-multi-select.js"></script>
         <link href="jspsych-6.0.4/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-        <link href="https://fonts.googleapis.com/css?family=Overpass:400,900" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Overpass:400,700,900" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Overpass+Mono" rel="stylesheet">
         <style>
+
         html, body, #experiment {
           margin: 0;
           width: 100%;
@@ -55,7 +56,7 @@
           width: 150px;
           /*height: 80px;*/
           padding: 10px;
-          background-color: rgba(255,255,255,0.2);
+          background-color: #012BFF;
           position: absolute;
           z-index: 2;
           top: calc(50% - 280px);
@@ -73,12 +74,14 @@
         #timer-label {
           display: inline-block;
           width: 40%;
+          font-weight: 700;
+          color: #F49661;
         }
         #timer {
           text-align: right;
           display: inline-block;
           width:60%;
-          color: orange;
+          color: #BEFBE6;
           font-size: 26px;
           font-family: 'Overpass Mono';
         }
@@ -88,9 +91,11 @@
         #score-label {
           display: inline-block;
           width: 60%;
+          font-weight: 700;
+          color: #F49661;
         }
         #score {
-          color: green;
+          color: #BEFBE6;
           font-size: 26px;
           display: inline-block;
           text-align: right;
@@ -321,7 +326,7 @@
       var instructions_2 = {
         type: 'html-button-response',
         stimulus: '<div id="help_screen" style="width:960px; height: 600px; position: relative;">'+
-          '<div id="title" style="text-align: left; position: absolute; top: 50px; left: 50px; padding-right: 50px; border-right: 2px solid white"><img src="img/help-title.jpg" style="height:500px;"></div>'+
+          '<div id="title" style="height: 500px; width: 190px; text-align: left; position: absolute; top: 50px; left: 50px; padding-right: 50px; border-right: 2px solid white"><img src="img/help-title.jpg" style="height:500px;"></div>'+
           '<div id="help-text"><h1>Same shape</h1><p>The two images below are the same shape. If you rotate the image on the right 180 degrees, you get the image on the left.</p><p>If the images are the same shape press Y.</p><img src="img/help-2.jpg" style="width:400px;"></div>'+
           '</div>',
         choices: ['NEXT'],
@@ -366,21 +371,28 @@
 
       var three = {
         type: 'html-keyboard-response',
-        stimulus: '<p style="font-family: \'Overpass\'; font-weight: 900; color: white; font-size: 200px; line-height: 300px;">3</p>',
+        stimulus: '<div style="height: 600px; width: 960px; position: relative;"><img style="position: absolute; width: 223px; height: 305px; left: calc(50% - 111px); top: calc(50% - 152px);" src="img/3.png">',
         trial_duration: 1000,
-        choices: jsPsych.NO_KEYS
+        choices: jsPsych.NO_KEYS,
+        on_start: function(){
+          // reset
+          document.querySelector('#timer').innerHTML = seconds_per_round.toFixed(2);
+          document.querySelector('#score').innerHTML = score;
+          // show overlay
+          document.querySelector('#overlay').style.visibility = 'visible';
+        }
       }
 
       var two = {
         type: 'html-keyboard-response',
-        stimulus: '<p style="font-family: \'Overpass\'; font-weight: 900; color: white; font-size: 200px; line-height: 300px;">2</p>',
+        stimulus: '<div style="height: 600px; width: 960px; position: relative;"><img style="position: absolute; width: 223px; height: 305px; left: calc(50% - 111px); top: calc(50% - 152px);" src="img/2.png">',
         trial_duration: 1000,
         choices: jsPsych.NO_KEYS
       }
 
       var one = {
         type: 'html-keyboard-response',
-        stimulus: '<p style="font-family: \'Overpass\'; font-weight: 900; color: white; font-size: 200px; line-height: 300px;">1</p>',
+        stimulus: '<div style="height: 600px; width: 960px; position: relative;"><img style="position: absolute; width: 62px; height: 305px; left: calc(50% - 31px); top: calc(50% - 152px);" src="img/1.png">',
         trial_duration: 1000,
         choices: jsPsych.NO_KEYS
       }
@@ -390,11 +402,7 @@
         type: 'call-function',
         func: function(){
           // reset
-          document.querySelector('#timer').innerHTML = seconds_per_round.toFixed(2);
-          document.querySelector('#score').innerHTML = score;
           start_time = performance.now();
-          // show overlay
-          document.querySelector('#overlay').style.visibility = 'visible';
           function next(time){
             remaining_time = seconds_per_round - (time - start_time)/1000;
             if(remaining_time < 0){
