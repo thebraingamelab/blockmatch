@@ -98,12 +98,6 @@
           font-family: 'Overpass Mono';
         }
 
-        #jspsych-html-button-response-btngroup {
-          position: absolute;
-          left: 50px;
-          bottom: 70px;
-        }
-
         .title-btn {
           background-color: white;
           color: black;
@@ -153,6 +147,71 @@
 
         .title-btn:active:after {
           height: 10px;
+        }
+
+        #help-text {
+          color: white;
+          font-family: 'Overpass';
+          width: 550px;
+          text-align: left;
+          position: absolute; 
+          top: 50px; 
+          left: 330px;
+        }
+
+        #help-text p {
+          font-size: 22px;
+        }
+
+        .help-btn {
+          background-color: white;
+          color: black;
+          width:150px;
+          height:50px;
+          font-size:30px;
+          border: none;
+          font-family: 'Overpass';
+          font-weight:900;
+          letter-spacing: 0.1em;
+          cursor: pointer;
+        }
+
+        .help-btn:before {
+          content: '';
+          position: absolute;
+          height: 50px;
+          width: 10px;
+          background-color: #F49661;
+          transform-origin: 0 0;
+          transform: skewY(45deg);
+          left:100%;
+          top: 0px;
+        }
+        .help-btn:after {
+          content: '';
+          position: absolute;
+          height: 10px;
+          width: 150px;
+          background-color: #012BFF;
+          transform-origin: 0 0;
+          transform: skewX(45deg);
+          top:100%;
+          left: 0px;
+        }
+
+        .help-btn:active {
+          position: relative;
+          top: 5px;
+          left: 5px;
+          outline: none;
+        }
+
+        .help-btn:active:before {
+          width: 5px;
+        }
+
+        .help-btn:active:after {
+          height: 5px;
         }
         
 
@@ -236,9 +295,52 @@
           '<div id="title_right" style="position: absolute; top: 50px; right: 50px;"><img src="img/titlescreen_right.jpg" style="height: 500px"></img></div></div>',
         choices: ['PLAY'],
         margin_horizontal: "0px",
-        button_html: '<button class="title-btn">%choice%</button>'
+        button_html: '<button class="title-btn">%choice%</button>',
+        on_start: function(){
+          var css = "<style id='btn_css'>#jspsych-html-button-response-btngroup { position: absolute; left: 50px; bottom: 70px; }</style>";
+          document.querySelector('head').insertAdjacentHTML('beforeend', css);
+        }
       }
-      timeline.push(title_screen);      
+      timeline.push(title_screen);
+      
+      var instructions_1 = {
+        type: 'html-button-response',
+        stimulus: '<div id="help_screen" style="width:960px; height: 600px; position: relative;">'+
+          '<div id="title" style="text-align: left; position: absolute; top: 50px; left: 50px; padding-right: 50px; border-right: 2px solid white"><img src="img/help-title.jpg" style="height:500px;"></div>'+
+          '<div id="help-text"><h1>How to play</h1><p>In this game, you will be comparing two shapes to determine whether they are the same shape or mirror images of each other.</p><img src="img/help-1.jpg" style="width:550px;"></div>'+
+          '</div>',
+        choices: ['NEXT'],
+        margin_horizontal: "0px",
+        button_html: '<button class="help-btn">%choice%</button>',
+        on_start: function(){
+          document.querySelector('#btn_css').innerHTML = "#jspsych-html-button-response-btngroup { position: absolute; right: 50px; bottom: 50px; }"
+        }       
+      }
+      timeline.push(instructions_1);
+
+      var instructions_2 = {
+        type: 'html-button-response',
+        stimulus: '<div id="help_screen" style="width:960px; height: 600px; position: relative;">'+
+          '<div id="title" style="text-align: left; position: absolute; top: 50px; left: 50px; padding-right: 50px; border-right: 2px solid white"><img src="img/help-title.jpg" style="height:500px;"></div>'+
+          '<div id="help-text"><h1>Same shape</h1><p>The two images below are the same shape. If you rotate the image on the right 180 degrees, you get the image on the left.</p><p>If the images are the same shape press Y.</p><img src="img/help-2.jpg" style="width:400px;"></div>'+
+          '</div>',
+        choices: ['NEXT'],
+        margin_horizontal: "0px",
+        button_html: '<button class="help-btn">%choice%</button>'
+      }
+      timeline.push(instructions_2);
+
+      var instructions_3 = {
+        type: 'html-button-response',
+        stimulus: '<div id="help_screen" style="width:960px; height: 600px; position: relative;">'+
+          '<div id="title" style="text-align: left; position: absolute; top: 50px; left: 50px; padding-right: 50px; border-right: 2px solid white"><img src="img/help-title.jpg" style="height:500px;"></div>'+
+          '<div id="help-text"><h1>Mirror image</h1><p>The two images below are not the same shape. The shape on the right is the mirror image of the shape on the left.</p><p>If the images are not the same shape press N.</p><img src="img/help-3.jpg" style="width:400px;"></div>'+
+          '</div>',
+        choices: ['NEXT'],
+        margin_horizontal: "0px",
+        button_html: '<button class="help-btn">%choice%</button>'
+      }
+      timeline.push(instructions_3);
 
       // create variable for number of correct responses
       var both_new = true;
