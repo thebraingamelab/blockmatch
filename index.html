@@ -366,7 +366,7 @@
       var score = 0;
       var remaining_time = null;
       var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
-
+      var n_in_this_shape = 0;
       var start_time = null;
 
       var three = {
@@ -434,6 +434,9 @@
           reflected:jsPsych.timelineVariable("reflected"),
           rotation_target: jsPsych.timelineVariable("orientation"),
           correct_match: jsPsych.timelineVariable("correct_key"),
+          data: {
+            shape_repetitions: function(){ return n_in_this_shape; }
+          },
           on_finish: function(){
             both_new = false
           }
@@ -448,7 +451,7 @@
           if(data.values()[0].timeout){
             return false;
           }
-
+          n_in_this_shape++;
           if (data.values()[0].correct){
             correct_responses_in_round++
             score += points_per_correct;
@@ -465,6 +468,7 @@
             // check for perfect round
             score += points_per_perfect_round;
             rounds_completed++;
+            n_in_this_shape = 0;
             shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
             correct_responses_in_round = 0;
             both_new = true;

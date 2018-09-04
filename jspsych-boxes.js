@@ -147,7 +147,11 @@ jsPsych.plugins['boxes'] = (function(){
 
     function end(){
       jsPsych.finishTrial({
-        correct: correct
+        correct: correct,
+        rt: rt,
+        rotation: trial.rotation_target,
+        shape: trial.filled_in_target,
+        reflected: trial.reflected
       })
     }
   }
