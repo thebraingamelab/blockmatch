@@ -218,6 +218,83 @@
         .help-btn:active:after {
           height: 5px;
         }
+
+        #score-text {
+          color:white;
+          font-family: 'Overpass';
+          width: 400px;
+          position: absolute;
+          left: calc(50% - 200px);
+          top: 130px;
+          font-size: 24px;
+        }
+
+        .left-score {
+          display: inline-block;
+          width: 70%;
+          text-align: left;
+        }
+
+        .right-score {
+          display: inline-block;
+          width: 30%;
+          text-align: right;
+        }
+
+        .big-score {
+          font-size: 32px;
+        }
+
+        .scoreboard-btn {
+          background-color: white;
+          color: black;
+          width:280px;
+          height:50px;
+          font-size:30px;
+          border: none;
+          font-family: 'Overpass';
+          font-weight:900;
+          letter-spacing: 0.1em;
+          cursor: pointer;
+        }
+
+        .scoreboard-btn:before {
+          content: '';
+          position: absolute;
+          height: 50px;
+          width: 10px;
+          background-color: #F49661;
+          transform-origin: 0 0;
+          transform: skewY(45deg);
+          left:100%;
+          top: 0px;
+        }
+        .scoreboard-btn:after {
+          content: '';
+          position: absolute;
+          height: 10px;
+          width: 280px;
+          background-color: #012BFF;
+          transform-origin: 0 0;
+          transform: skewX(45deg);
+          top:100%;
+          left: 0px;
+        }
+
+        .scoreboard-btn:active {
+          position: relative;
+          top: 5px;
+          left: 5px;
+          outline: none;
+        }
+
+        .scoreboard-btn:active:before {
+          width: 5px;
+        }
+
+        .scoreboard-btn:active:after {
+          height: 5px;
+        }
         
 
         </style>
@@ -234,11 +311,11 @@
       <script>
 
       // game parameters
-      var correct_responses_per_round = 5;
-      var seconds_per_round = 90;
+      var seconds_per_round = 10;
       var num_rounds = 8;
+      var correct_responses_per_shape = 5;
       var points_per_correct = 10;
-      var points_per_perfect_round = 100;
+      var points_per_perfect_shape = 100;
 
       var trials = [
         {reflected:true, orientation: 30, correct_key: 'n'},
@@ -359,15 +436,16 @@
       }
       timeline.push(instructions_3);
 
-      // create variable for number of correct responses
+      var best_score = 0;
       var both_new = true;
-      var correct_responses_in_round = 0;
-      var rounds_completed= 0;
+      var correct_responses_for_shape = 0;
+      var shapes_completed = 0;
       var score = 0;
       var remaining_time = null;
       var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
       var n_in_this_shape = 0;
       var start_time = null;
+      var round = 1;
 
       var three = {
         type: 'html-keyboard-response',
@@ -428,14 +506,17 @@
           grid_cols: 4,
           filled_in_reference: function() {return shape},
           both_new: function() {return both_new},
-          clearboth: function () {return correct_responses_in_round == correct_responses_per_round - 1},
+          clearboth: function () {return correct_responses_for_shape == correct_responses_per_shape - 1},
           square_size: 70,
           rotation_reference: 0,
           reflected:jsPsych.timelineVariable("reflected"),
           rotation_target: jsPsych.timelineVariable("orientation"),
           correct_match: jsPsych.timelineVariable("correct_key"),
-          data: {
-            shape_repetitions: function(){ return n_in_this_shape; }
+          data: function() {
+            return {
+              round: round,
+              shape_repetitions: n_in_this_shape
+            }
           },
           on_finish: function(){
             both_new = false
@@ -449,29 +530,59 @@
 
         loop_function: function(data){
           if(data.values()[0].timeout){
+            if(score > best_score){
+              best_score = score;
+            }
+            document.querySelector('#overlay').style.visibility = 'hidden';
+            jsPsych.pluginAPI.cancelAllKeyboardResponses();
             return false;
           }
           n_in_this_shape++;
           if (data.values()[0].correct){
-            correct_responses_in_round++
+            correct_responses_for_shape++
             score += points_per_correct;
           }
-          if (correct_responses_in_round == correct_responses_per_round) {
-            // check for perfect round
-            if(n_in_this_shape == correct_responses_per_round){
-              score += points_per_perfect_round;
+          if (correct_responses_for_shape == correct_responses_per_shape) {
+            // check for perfect shape
+            if(n_in_this_shape == correct_responses_per_shape){
+              score += points_per_perfect_shape;
             }
-            rounds_completed++;
+            shapes_completed++;
             n_in_this_shape = 0;
             shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8)
-            correct_responses_in_round = 0;
+            correct_responses_for_shape = 0;
             both_new = true;
           }
           return true;
         }
       }
-
       timeline.push(box_trials);
+
+      var round_over = {
+        type: 'html-button-response',
+        stimulus: function(){
+          var this_round_data = jsPsych.data.get().filter({round: round});
+          var total = this_round_data.filterCustom(function(x) { return typeof x.timeout == 'undefined'; }).count();
+          var n_correct = this_round_data.filter({correct: true}).count();
+          var rt = this_round_data.filter({correct: true}).select('rt').mean();
+
+          var html = '<div id="scoreboard" style="width:960px; height: 600px; position: relative;">';
+          html += '<div id="score-text">';
+          html += '<h1>Round '+round+' of '+num_rounds+'</h1>';
+          html += '<p class="big-score">You scored '+score+' points.</p>';
+          html += '<p><span class="left-score">Correct responses</span><span class="right-score">'+n_correct+' of '+total+'</span></p>';
+          html += '<p><span class="left-score">Average response time</span><span class="right-score">'+Math.round(rt)+'ms</span></p>';
+          html += '<p><span class="left-score">Best score so far</span><span class="right-score">'+best_score+'</span></p>';
+          html += '</div>';
+          html += '</div>';
+        
+          return html;
+        },
+        choices: ['NEXT ROUND'],
+        margin_horizontal: "0px",
+        button_html: '<button class="scoreboard-btn">%choice%</button>'
+      }
+      timeline.push(round_over);
 
       
 /*
