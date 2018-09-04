@@ -442,7 +442,7 @@
       var shapes_completed = 0;
       var score = 0;
       var remaining_time = null;
-      var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
+      var shape = null;
       var n_in_this_shape = 0;
       var start_time = null;
       var round = 1;
@@ -455,7 +455,7 @@
         on_start: function(){
           // reset
           document.querySelector('#timer').innerHTML = seconds_per_round.toFixed(2);
-          document.querySelector('#score').innerHTML = score;
+          document.querySelector('#score').innerHTML = 0;
           // show overlay
           document.querySelector('#overlay').style.visibility = 'visible';
         }
@@ -474,12 +474,17 @@
         trial_duration: 1000,
         choices: jsPsych.NO_KEYS
       }
-      timeline.push(three, two, one);
 
       var start_round = {
         type: 'call-function',
         func: function(){
           // reset
+          score = 0;
+          shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
+          both_new = true;
+          correct_responses_for_shape = 0;
+          shapes_completed = 0;
+          n_in_this_shape = 0
           start_time = performance.now();
           function next(time){
             remaining_time = seconds_per_round - (time - start_time)/1000;
@@ -497,7 +502,6 @@
           window.requestAnimationFrame(next);
         }
       }
-      timeline.push(start_round);
 
       var box_trials = {
         timeline: [{
@@ -556,7 +560,6 @@
           return true;
         }
       }
-      timeline.push(box_trials);
 
       var round_over = {
         type: 'html-button-response',
@@ -578,11 +581,23 @@
         
           return html;
         },
-        choices: ['NEXT ROUND'],
+        choices: ['CONTINUE'],
         margin_horizontal: "0px",
         button_html: '<button class="scoreboard-btn">%choice%</button>'
       }
-      timeline.push(round_over);
+
+      var all_rounds = {
+        timeline: [three, two, one, start_round, box_trials, round_over],
+        loop_function: function(){
+          if(round == num_rounds){
+            return false;
+          } else {
+            round++;
+            return true;
+          }
+        }
+      }
+      timeline.push(all_rounds);
 
       
 /*
