@@ -14,7 +14,7 @@
         <script src="jspsych-6.0.4/plugins/jspsych-survey-text.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-survey-multi-select.js"></script>
         <link href="jspsych-6.0.4/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-        <link href="https://fonts.googleapis.com/css?family=Overpass" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Overpass:400,900" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Overpass+Mono" rel="stylesheet">
         <style>
         html, body, #experiment {
@@ -98,6 +98,64 @@
           font-family: 'Overpass Mono';
         }
 
+        #jspsych-html-button-response-btngroup {
+          position: absolute;
+          left: 50px;
+          bottom: 70px;
+        }
+
+        .title-btn {
+          background-color: white;
+          color: black;
+          width:600px;
+          height:100px;
+          font-size:60px;
+          border: none;
+          font-family: 'Overpass';
+          font-weight:900;
+          letter-spacing: 0.25em;
+          cursor: pointer;
+        }
+
+        .title-btn:before {
+          content: '';
+          position: absolute;
+          height: 100px;
+          width: 20px;
+          background-color: #F49661;
+          transform-origin: 0 0;
+          transform: skewY(45deg);
+          left:100%;
+          top: 0px;
+        }
+        .title-btn:after {
+          content: '';
+          position: absolute;
+          height: 20px;
+          width: 600px;
+          background-color: #012BFF;
+          transform-origin: 0 0;
+          transform: skewX(45deg);
+          top:100%;
+          left: 0px;
+        }
+
+        .title-btn:active {
+          position: relative;
+          top: 10px;
+          left: 10px;
+          outline: none;
+        }
+
+        .title-btn:active:before {
+          width: 10px;
+        }
+
+        .title-btn:active:after {
+          height: 10px;
+        }
+        
+
         </style>
       </head>
       <body>
@@ -177,6 +235,7 @@
           '<div id="title" style="text-align: left; position: absolute; top: 50px; left: 50px;"><img src="img/blockmatch_title.jpg" style="width:650px;"></div>'+
           '<div id="title_right" style="position: absolute; top: 50px; right: 50px;"><img src="img/titlescreen_right.jpg" style="height: 500px"></img></div></div>',
         choices: ['PLAY'],
+        margin_horizontal: "0px",
         button_html: '<button class="title-btn">%choice%</button>'
       }
       timeline.push(title_screen);      
