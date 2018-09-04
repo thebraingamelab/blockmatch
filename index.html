@@ -230,7 +230,7 @@
 
       // game parameters
       var correct_responses_per_round = 5;
-      var seconds_per_round = 2;
+      var seconds_per_round = 90;
       var num_rounds = 8;
       var points_per_correct = 10;
       var points_per_perfect_round = 100;
@@ -342,6 +342,18 @@
       }
       timeline.push(instructions_3);
 
+      var instructions_3 = {
+        type: 'html-button-response',
+        stimulus: '<div id="help_screen" style="width:960px; height: 600px; position: relative;">'+
+          '<div id="title" style="text-align: left; position: absolute; top: 50px; left: 50px; padding-right: 50px; border-right: 2px solid white"><img src="img/help-title.jpg" style="height:500px;"></div>'+
+          '<div id="help-text"><h1>Scoring</h1><p>Each correct response is worth 10 points. After 5 correct responses, the shape will change. If you get all 5 responses for a shape correct, you get a bonus 100 points.</p><p>You\'ll play eight rounds of the game. Each round is 90 seconds. We will show you your scores after every round.</p></div>'+
+          '</div>',
+        choices: ['BEGIN'],
+        margin_horizontal: "0px",
+        button_html: '<button class="help-btn">%choice%</button>'
+      }
+      timeline.push(instructions_3);
+
       // create variable for number of correct responses
       var both_new = true;
       var correct_responses_in_round = 0;
@@ -351,6 +363,28 @@
       var shape = jsPsych.plugins["boxes"].generateFullShape(4,4,8);
 
       var start_time = null;
+
+      var three = {
+        type: 'html-keyboard-response',
+        stimulus: '<p style="font-family: \'Overpass\'; font-weight: 900; color: white; font-size: 200px; line-height: 300px;">3</p>',
+        trial_duration: 1000,
+        choices: jsPsych.NO_KEYS
+      }
+
+      var two = {
+        type: 'html-keyboard-response',
+        stimulus: '<p style="font-family: \'Overpass\'; font-weight: 900; color: white; font-size: 200px; line-height: 300px;">2</p>',
+        trial_duration: 1000,
+        choices: jsPsych.NO_KEYS
+      }
+
+      var one = {
+        type: 'html-keyboard-response',
+        stimulus: '<p style="font-family: \'Overpass\'; font-weight: 900; color: white; font-size: 200px; line-height: 300px;">1</p>',
+        trial_duration: 1000,
+        choices: jsPsych.NO_KEYS
+      }
+      timeline.push(three, two, one);
 
       var start_round = {
         type: 'call-function',
