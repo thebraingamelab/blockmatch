@@ -817,7 +817,7 @@ window.jsPsych = (function() {
     }
 
     // apply the focus to the DOM (for keyboard events)
-    DOM_target.focus();
+    opts.display_element.focus();
 
     // execute trial method
     jsPsych.plugins[trial.type].trial(DOM_target, trial);

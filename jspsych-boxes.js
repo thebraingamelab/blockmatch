@@ -110,7 +110,7 @@ jsPsych.plugins['boxes'] = (function(){
     var rt = null;
 
     // make sure focus is on screen
-    document.querySelector('body').focus();
+    //document.querySelector('#jspsych-content').focus();
 
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: after_response,

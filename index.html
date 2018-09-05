@@ -28,6 +28,10 @@
           background-color: white;
         }
 
+        #jspsych-content {
+          max-width: 960px;
+        }
+
         #progress{
           height: 120px;
           width: 600px;
@@ -365,6 +369,7 @@
           new_css += 'html, body { background-color: black; }'
           new_css += "#jspsych-content { height: 600px; width: 960px; position: relative; overflow: hidden; background-color: black; border-top: #012BFF 6px solid; border-left: #012BFF 6px solid; border-right: 6px solid #F49661; border-bottom: 6px solid #F49661; }"
           new_css += "#jspsych-content:before { content: ''; position: absolute; pointer-events: none; z-index: 1; top: 0; left: 0; right: 0; bottom: 0; border-top: #F49661 6px solid; border-left: #F49661 6px solid; border-right: 6px solid #012BFF; border-bottom: 6px solid #012BFF; }"
+          new_css += '</style>'
           document.querySelector('head').insertAdjacentHTML('beforeend', new_css);
         }
       }
@@ -601,54 +606,92 @@
             return true;
           }
         }
-      }
+      };
       timeline.push(all_rounds);
 
-      
-/*
-     var survey1 ={
-         type: 'survey-text',
-         questions:[{prompt:"<p>What is your age?</p>"},
-         {prompt:"<p>What is your gender?</p>"},{prompt:"<p>In the past week, how"+
-       " many hours have you played video games of any kind?</p>"}]
-        };
-     timeline.push(survey1);
+      var switch_to_regular_style = {
+        type: 'call-function',
+        func: function(){
+          document.querySelector('#game_css').remove();
+          document.querySelector('#btn_css').remove();
+        }
+      }
+      timeline.push(switch_to_regular_style);
 
-     var survey2 ={
-       type: 'survey-multi-select',
-       questions:[{prompt:"<p>Which of the following platform(s) have you played games on in the past week?</p>",
-       options:['Mobile','Desktop/Laptop Web Browser', 'Facebook'],
-       horizontal: true}]
-        };
-     timeline.push(survey2);
+      var switch_screen = {
+        type: 'html-button-response',
+        stimulus: "<p>That's it for the game. Thanks for playing!</p><p>We have a few short questions on the next four screens, and then you'll be finished with the experiment.</p>",
+        choices: ['CONTINUE']
+      }
+      timeline.push(switch_screen);
 
-     var survey3 ={
-         type: 'survey-multi-choice',
-         questions: [{prompt: "<p> if this game were available for free, how likely would you be to play it again?</p>",
-         options:['Would not play again', 'Not sure', 'Would play again'], horizontal: true},
-         {prompt:"<p>if you could see how your scores compare to those around the world, would that motivate you to play it?</p>",
-         options:['would not motivate me','Not sure','Would motivate me'], horizontal: true},
-         {prompt:"<p>If you could see how your scores compare to people similar to you (similar age and/or location), would that motivate you to play it?</p>",
-         options:['would not motivate me','Not sure','Would motivate me'], horizontal: true},
-         {prompt:"<p>If you could see how your scores change over time to track your improvement, would that motivate you to play it?</p>",
-         options:['would not motivate me','Not sure','Would motivate me'], horizontal: true}]
-         };
-    timeline.push(survey3);
-
-    var survey4 ={
+      var survey1 ={
         type: 'survey-text',
-        questions:[{prompt:"<p>Is there any other feedback you would like to give? (Aspects of the game that you did or did not like, parts of the instructions that were confusing, technical problems, or anything else that you’d like to share).</p>",
-         ows: 4}, {prompt: "<p>Did you notice any bugs/glitches?</p>", rows:4}]
-       };
-   timeline.push(survey4);
+        questions:[
+          {prompt:"<p>What is your age?</p>"},
+          {prompt:"<p>What is your gender?</p>"},
+          {prompt:"<p>In the past week, how many hours have you played video games of any kind?</p>"}
+        ]
+      };
+      timeline.push(survey1);
 
-   var payment ={
-     type: 'html-keyboard-response',
-     stimulus: "<p>Here is your payment</p>",
-     choices: jsPsych.NO_KEYS
-   };
-   timeline.push(payment);
-*/
+      var survey2 ={
+        type: 'survey-multi-select',
+        questions:[
+          {
+            prompt:"<p>Which of the following platform(s) have you played games on in the past week?</p>",
+            options: ['Mobile', 'Desktop/Laptop Web Browser', 'Facebook'],
+            horizontal: true
+          }
+        ]
+      };
+      timeline.push(survey2);
+
+      var survey3 ={
+        type: 'survey-multi-choice',
+        questions: [
+          {
+            prompt: "<p>If this game were available for free, how likely would you be to play it again?</p>",
+            options: ['Would not play again', 'Not sure', 'Would play again'], 
+            horizontal: true
+          },
+          {
+            prompt: "<p>If you could see how your scores compare to other people around the world, would that motivate you to play it?</p>",
+            options: ['Would not motivate me','Not sure','Would motivate me'], 
+            horizontal: true
+          },
+          {
+            prompt: "<p>If you could see how your scores compare to people similar to you (similar age and/or location), would that motivate you to play it?</p>",
+            options:['Would not motivate me','Not sure','Would motivate me'], 
+            horizontal: true
+          },
+          {
+            prompt:"<p>If you could see how your scores change over time to track your improvement, would that motivate you to play it?</p>",
+            options:['Would not motivate me','Not sure','Would motivate me'], 
+            horizontal: true}
+        ]
+      };
+      timeline.push(survey3);
+
+      var survey4 ={
+        type: 'survey-text',
+        questions:[
+          {
+            prompt:"<p>Is there any other feedback you would like to give?<br>(Aspects of the game that you did or did not like, parts of the instructions that were confusing, technical problems, or anything else that you’d like to share).</p>",
+            rows: 4,
+            cols: 100
+          }
+        ]
+      };
+      timeline.push(survey4);
+
+      var payment ={
+        type: 'html-keyboard-response',
+        stimulus: "<p>Here is your payment</p>",
+        choices: jsPsych.NO_KEYS
+      };
+      timeline.push(payment);
+
       jsPsych.init({
         timeline: timeline,
         display_element: 'experiment'
