@@ -13,6 +13,7 @@
         <script src="jspsych-6.0.4/plugins/jspsych-survey-multi-choice.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-survey-text.js"></script>
         <script src="jspsych-6.0.4/plugins/jspsych-survey-multi-select.js"></script>
+        <script src="js/serverComm.js"></script>
         <link href="jspsych-6.0.4/css/jspsych.css" rel="stylesheet" type="text/css"></link>
         <link href="https://fonts.googleapis.com/css?family=Overpass:400,700,900" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Overpass+Mono" rel="stylesheet">
@@ -709,6 +710,15 @@
         data: {survey_part: 4}
       };
       timeline.push(survey4);
+
+      var save_data = {
+        type: 'call-function',
+        func: function(){
+          var data = jsPsych.data.get().values();
+          serverComm.save_data(data);
+        }
+      }
+      timeline.push(save_data);
 
       var payment ={
         type: 'html-keyboard-response',
