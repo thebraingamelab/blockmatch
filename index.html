@@ -316,7 +316,7 @@
 
       // game parameters
       var seconds_per_round = 60;
-      var num_rounds = 8;
+      var num_rounds = 4;
       var correct_responses_per_shape = 5;
       var points_per_correct = 10;
       var points_per_perfect_shape = 100;
@@ -340,33 +340,45 @@
 
       var welcome ={
         type: 'html-button-response',
-        stimulus: "<p> This is a research project conducted at Vassar College. " +
-        "In this experiment you will play a</p><p>computer game that is "+
+        stimulus: "<p>This is a research project conducted at Vassar College. " +
+        "In this experiment you will play a computer game that is "+
         "designed to measure aspects of your cognition; such as attention, "+
-        "memory,</p><p>and learning. We will record data about how you play, "+
-        "such as what keys you pressed or where</p><p>you clicked. The "+
-        "experiment will take approximately [X] minutes to complete. You will "+
-        "recieve</p><p>a payment of [$X] upon completion of the experiment. "+
-        "The data we collect will be used for</p><p>research purposes. We do "+
+        "memory, and learning. We will record data about how you play, "+
+        "such as what keys you pressed or where you clicked. The "+
+        "experiment will take approximately 8 minutes to complete. You will "+
+        "recieve a payment of $1.50 upon completion of the experiment. "+
+        "The data we collect will be used for research purposes. We do "+
         "not collect any personally identifying information, so your data is"+
-        "</p><p>anonymous. You are free to stop the experiment by closing "+
-        "your browser window at any time. If</p><p>you have any questions, you "+
+        " anonymous. You are free to stop the experiment by closing "+
+        "your browser window at any time. If you have any questions, you "+
         "can contact the researchers through Prolific's messaging system.</p>"+
-        "<p></p><p> By clicking 'I agree', you affirm that you are at least "+
-        "18 years of age, which is the minimum age</p><p>to participate in "+
+        "<p>By clicking 'I agree', you affirm that you are at least "+
+        "18 years of age, which is the minimum age to participate in "+
         "this study, and that you understand the nature of your participation "+
-        "in this</p><p>research. If you do not wish to participate, please "+
+        "in this research. If you do not wish to participate, please "+
         "close this window.</p>",
         choices: ["I agree"],
         button_html: '<button class="jspsych-btn">%choice%</button>',
       };
-      //timeline.push(welcome);
+      timeline.push(welcome);
+
+      var explainer = {
+        type: 'html-button-response',
+        stimulus: '<p>In this experiment we are testing a game that is designed '+
+          'to measure aspects of your cognitive ability. We are interested in whether '+
+          'this game produces data that are similar to what we would expect from more traditional laboratory assessments.</p>'+
+          '<p>The next screen will load the game. There will be a short set of instructions '+
+          'and then you will play the game for about 5 minutes. After the game is complete '+
+          'we will ask you to fill out a short survey about the game.</p>',
+        choices: ["I'm ready to start"]
+      }
+      timeline.push(explainer);
 
       var switch_to_game_style = {
         type: 'call-function',
         func: function(){
           var new_css = '<style id="game_css">'
-          new_css += 'html, body { background-color: black; }'
+          new_css += 'html, body { background: url("img/dark-triangles.png"); }'
           new_css += "#jspsych-content { height: 600px; width: 960px; position: relative; overflow: hidden; background-color: black; border-top: #012BFF 6px solid; border-left: #012BFF 6px solid; border-right: 6px solid #F49661; border-bottom: 6px solid #F49661; }"
           new_css += "#jspsych-content:before { content: ''; position: absolute; pointer-events: none; z-index: 1; top: 0; left: 0; right: 0; bottom: 0; border-top: #F49661 6px solid; border-left: #F49661 6px solid; border-right: 6px solid #012BFF; border-bottom: 6px solid #012BFF; }"
           new_css += '</style>'
@@ -433,7 +445,7 @@
         type: 'html-button-response',
         stimulus: '<div id="help_screen" style="width:960px; height: 600px; position: relative;">'+
           '<div id="title" style="text-align: left; position: absolute; top: 50px; left: 50px; padding-right: 50px; border-right: 2px solid white"><img src="img/help-title.jpg" style="height:500px;"></div>'+
-          '<div id="help-text"><h1>Scoring</h1><p>Each correct response is worth 10 points. After 5 correct responses, the shape will change. If you get all 5 responses for a shape correct, you get a bonus 100 points.</p><p>You\'ll play eight rounds of the game. Each round is 90 seconds. We will show you your scores after every round.</p></div>'+
+          '<div id="help-text"><h1>Scoring</h1><p>Each correct response is worth 10 points. After 5 correct responses, the shape will change. If you get all 5 responses for a shape correct, you get a bonus 100 points.</p><p>You\'ll play '+num_rounds+' rounds of the game. Each round lasts '+seconds_per_round+' seconds. You can see your scores after every round.</p></div>'+
           '</div>',
         choices: ['BEGIN'],
         margin_horizontal: "0px",
