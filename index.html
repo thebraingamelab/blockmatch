@@ -314,6 +314,15 @@
       </body>
       <script>
 
+      // get subject ID
+      var pid = jsPsych.data.getURLVariable('prolific_pid');
+      if(pid == "" || pid == null || pid == undefined){
+        pid = jsPsych.randomization.randomID(45);
+      }
+      jsPsych.data.addProperties({
+        prolific_pid: pid
+      });
+
       // game parameters
       var seconds_per_round = 60;
       var num_rounds = 4;
@@ -633,7 +642,7 @@
       var switch_screen = {
         type: 'html-button-response',
         stimulus: "<p>That's it for the game. Thanks for playing!</p><p>We have a few short questions on the next four screens, and then you'll be finished with the experiment.</p>",
-        choices: ['CONTINUE']
+        choices: ['CONTINUE'],
       }
       timeline.push(switch_screen);
 
@@ -643,7 +652,8 @@
           {prompt:"<p>What is your age?</p>"},
           {prompt:"<p>What is your gender?</p>"},
           {prompt:"<p>In the past week, how many hours have you played video games of any kind?</p>"}
-        ]
+        ],
+        data: {survey_part: 1}
       };
       timeline.push(survey1);
 
@@ -655,7 +665,8 @@
             options: ['Mobile', 'Desktop/Laptop Web Browser', 'Facebook'],
             horizontal: true
           }
-        ]
+        ],
+        data: {survey_part: 2}
       };
       timeline.push(survey2);
 
@@ -681,7 +692,8 @@
             prompt:"<p>If you could see how your scores change over time to track your improvement, would that motivate you to play it?</p>",
             options:['Would not motivate me','Not sure','Would motivate me'], 
             horizontal: true}
-        ]
+        ],
+        data: {survey_part: 3}
       };
       timeline.push(survey3);
 
@@ -693,7 +705,8 @@
             rows: 4,
             cols: 100
           }
-        ]
+        ],
+        data: {survey_part: 4}
       };
       timeline.push(survey4);
 
